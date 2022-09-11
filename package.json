@@ -1,0 +1,63 @@
+{
+  "name": "jest-openapi-reporter",
+  "version": "1.0.0",
+  "description": "A reporter for OpenAPI coverage.",
+  "author": "Alex Mendes",
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -d",
+    "prebuild": "rimraf dist",
+    "test": "jest",
+    "lint": "eslint .",
+    "prepublishOnly": "yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexandermendes/jest-openapi-reporter.git"
+  },
+  "homepage": "https://github.com/alexandermendes/jest-openapi-reporter#readme",
+  "bugs": {
+    "url": "https://github.com/alexandermendes/jest-openapi-reporter/issues"
+  },
+  "files": [
+    "src",
+    "dist",
+    "bin"
+  ],
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "keywords": [
+    "jest",
+    "openapi",
+    "reporter"
+  ],
+  "devDependencies": {
+    "@commitlint/config-conventional": "^16.0.0",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@types/app-root-path": "^1.2.4",
+    "@types/jest": "^27.4.0",
+    "@typescript-eslint/eslint-plugin": "^5.11.0",
+    "@typescript-eslint/parser": "^5.11.0",
+    "commitlint": "^8.3.5",
+    "eslint": "^8.8.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.0.0",
+    "husky": "^4.2.5",
+    "jest": "^27.5.1",
+    "rimraf": "^3.0.2",
+    "semantic-release": "^19.0.2",
+    "ts-jest": "^27.0.4",
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@jest/reporters": "^29.0.3",
+    "@jest/test-result": "^29.0.3",
+    "node-request-interceptor": "^0.6.3"
+  }
+}
