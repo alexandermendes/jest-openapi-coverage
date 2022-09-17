@@ -48,13 +48,13 @@ or by loading it dynamically when your tests are running, for example:
 
 ```js
 import fetch from 'node-fetch';
-import { writeDocs } from 'jest-openapi-coverage';
+import { setupOpenApiDocs } from 'jest-openapi-coverage';
 
 beforeAll(async () => {
   const res = await fetch('http://localhost:1234/docs.json');
   const docs = await res.json();
 
-  writeDocs(docs);
+  setupOpenApiDocs(docs);
 });
 ```
 

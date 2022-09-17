@@ -16,8 +16,8 @@ export const globalTeardown = async (globalConfig: Config.GlobalConfig) => {
 
   if (!docs) {
     throw new Error(
-      'Could not determine OpenAPI coverage as no specification has '
-      + 'been provided. See the `docsPath` config option or the `writeDocs` function.',
+      'Could not determine OpenAPI coverage as no specification has been provided. '
+      + 'See the `docsPath` config option or the `setupOpenApiDocs` function.',
     );
   }
 
