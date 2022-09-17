@@ -33,10 +33,31 @@ Add the following to your [Jest config](https://jestjs.io/docs/configuration):
 module.exports = {
   setupFilesAfterEnv: ['<rootDir>/jest.setup-after-env.js'],
   globalSetup: 'jest-openapi-coverage/global-setup',
+  globalTeardown: 'jest-openapi-coverage/global-teardown',
 };
 ```
 
-### Manual setup
+You will also need to provide the OpenAPI docs that will be used to determine
+coverage, either via the configuration file (see below) or by loading it
+dynamically when your tests are running, for example:
+
+```js
+import fetch from 'node-fetch';
+import { writeDocs } from 'jest-openapi-coverage';
+
+beforeAll(async () => {
+  const res = await fetch('http://localhost:1234/docs.json');
+  const docs = await res.json();
+
+  writeDocs(docs);
+});
+```
+
+## Configuration
+
+TODO!
+
+## Manual setup
 
 If you already have Jest setup files that you want to reuse you can call the
 relevant `jest-openapi-coverage` functions from those files directly instead,
