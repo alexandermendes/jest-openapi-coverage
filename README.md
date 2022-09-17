@@ -2,7 +2,12 @@
 
 [![npm version](https://badge.fury.io/js/jest-openapi-coverage.svg)](https://badge.fury.io/js/jest-openapi-coverage)
 
-Reports coverage based on [OpenAPI](https://swagger.io/specification/) specifications.
+Reports coverage based on [OpenAPI](https://swagger.io/specification/) specifications
+for integration tests run using Jest.
+
+It intercepts outgoing requests then reports coverage based on the OpenAPI
+[paths and operations](https://swagger.io/docs/specification/paths-and-operations/)
+that were run and the query parameters included.
 
 ## Installation
 
