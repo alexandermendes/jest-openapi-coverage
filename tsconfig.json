@@ -13,5 +13,5 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src/*", "src/request/request.ts", "src/request/request-interceptor.ts"],
+  "include": ["src/*"],
 }
