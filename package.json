@@ -65,6 +65,7 @@
   "dependencies": {
     "@mswjs/interceptors": "^0.17.5",
     "app-root-path": "^3.1.0",
+    "chalk": "^4.0.0",
     "console-table-printer": "^2.11.1",
     "fs-extra": "^10.1.0",
     "jest-config": "^29.0.3",
