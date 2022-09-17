@@ -63,8 +63,6 @@ const getMatchingRequests = (
   method: string,
   methodConfig: OperationObject,
 ) => requests.filter((request) => {
-  console.log(request);
-
   if (request.method.toLowerCase() !== method) {
     return false;
   }
