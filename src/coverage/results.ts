@@ -16,22 +16,13 @@ type QueryParamCoverageResult = {
   covered: boolean;
 };
 
-type CoverageResult = {
+export type CoverageResult = {
   path: string;
   method: string;
   covered: boolean;
   queryParams: QueryParamCoverageResult[];
   percentageOfQueriesCovered: number;
 }
-
-const table = new Table({
-  columns: [
-    { name: 'method', alignment: 'left', title: 'Method' },
-    { name: 'endpoint', alignment: 'left', title: 'Endpoint' },
-    { name: 'queries', alignment: 'center', title: '% Queries' },
-    { name: 'uncovered', alignment: 'left', title: 'Uncovered queries' },
-  ],
-});
 
 const getPathParts = (path: string) => path.replace(/^\/|\/$/g, '').split('/');
 

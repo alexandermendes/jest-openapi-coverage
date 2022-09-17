@@ -1,4 +1,5 @@
-import { reportCoverage } from './coverage/results';
+import { getCoverageResults } from './coverage/results';
+import { printTable } from './coverage/table';
 import { readDocs } from './report/docs';
 import { loadRequests } from './report/requests';
 
@@ -10,6 +11,7 @@ export const globalTeardown = async () => {
   }
 
   const requests = await loadRequests();
+  const results = await getCoverageResults(docs, requests);
 
-  reportCoverage(docs, requests);
+  printTable(results);
 };
