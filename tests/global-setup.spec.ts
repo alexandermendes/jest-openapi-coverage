@@ -19,7 +19,7 @@ describe('Global setup', () => {
   beforeEach(() => {
     (getOpenApiConfig as jest.Mock).mockReturnValue({
       enabled: true,
-      coverageDirectory: '/coverage',
+      coverageDirectory: '/coverage/openapi',
     });
   });
 
@@ -27,7 +27,7 @@ describe('Global setup', () => {
     globalSetup(globalConfig);
 
     expect(rimraf.sync).toHaveBeenCalledTimes(1);
-    expect(rimraf.sync).toHaveBeenCalledWith('/coverage');
+    expect(rimraf.sync).toHaveBeenCalledWith('/coverage/openapi');
   });
 
   it('does not load docs from the config file by default', () => {
@@ -43,13 +43,13 @@ describe('Global setup', () => {
     (getOpenApiConfig as jest.Mock).mockReturnValue({
       enabled: true,
       docsPath,
-      coverageDirectory: '/coverage',
+      coverageDirectory: '/coverage/openapi',
     });
 
     globalSetup(globalConfig);
 
     expect(writeDocs).toHaveBeenCalledTimes(1);
-    expect(writeDocs).toHaveBeenCalledWith('/coverage', { mock: 'docs' });
+    expect(writeDocs).toHaveBeenCalledWith('/coverage/openapi', { mock: 'docs' });
   });
 
   it('does nothing if not enabled', () => {

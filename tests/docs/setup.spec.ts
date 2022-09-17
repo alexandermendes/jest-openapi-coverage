@@ -18,7 +18,7 @@ describe('Docs: Setup', () => {
   beforeEach(() => {
     (getJestConfig as jest.Mock).mockReturnValue(globalConfig);
     (getOpenApiConfig as jest.Mock).mockReturnValue({
-      coverageDirectory: '/coverage',
+      coverageDirectory: '/coverage/openapi',
     });
   });
 
@@ -31,6 +31,6 @@ describe('Docs: Setup', () => {
     expect(getOpenApiConfig).toHaveBeenCalledWith(globalConfig);
 
     expect(writeDocs).toHaveBeenCalledTimes(1);
-    expect(writeDocs).toHaveBeenCalledWith('/coverage', openApiDocs);
+    expect(writeDocs).toHaveBeenCalledWith('/coverage/openapi', openApiDocs);
   });
 });
