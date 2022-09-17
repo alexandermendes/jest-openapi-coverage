@@ -4,7 +4,7 @@
   "description": "A reporter for OpenAPI coverage.",
   "author": "Alex Mendes",
   "license": "ISC",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc -d",
     "prebuild": "rimraf dist",
