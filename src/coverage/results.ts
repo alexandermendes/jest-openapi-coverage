@@ -9,7 +9,7 @@ import {
   ReferenceObject,
   ServerObject,
 } from 'openapi3-ts';
-import { InterceptedRequest } from '../request';
+import { InterceptedRequest } from '../request/parser';
 
 type QueryParamCoverageResult = {
   name: string;

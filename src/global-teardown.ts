@@ -1,7 +1,7 @@
 import { getCoverageResults } from './coverage/results';
 import { printTable } from './coverage/table';
-import { readDocs } from './report/docs';
-import { loadRequests } from './report/requests';
+import { readDocs } from './docs/io';
+import { loadRequests } from './request/io';
 
 export const globalTeardown = async () => {
   const docs = await readDocs();

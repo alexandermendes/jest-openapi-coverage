@@ -1,5 +1,5 @@
 import { OpenAPIObject } from 'openapi3-ts';
-import { getCoverageResults } from '../src/coverage/results';
+import { getCoverageResults } from '../../src/coverage/results';
 
 const docs: OpenAPIObject = {
   openapi: '3.0.0',

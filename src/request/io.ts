@@ -1,11 +1,11 @@
 import fse from 'fs-extra';
 import path from 'path';
 import { getOpenApiCoverageDir } from '../config/openapi';
-import { InterceptedRequest } from '../request';
+import { InterceptedRequest } from './parser';
 
 const REQUESTS_FILE_PREFIX = 'requests';
 
-export const writeRequestsFile = async (requests: InterceptedRequest[]) => {
+export const storeRequests = async (requests: InterceptedRequest[]) => {
   const coverageDir = await getOpenApiCoverageDir();
   const timestamp = new Date().getTime();
   const outputFileName = `${REQUESTS_FILE_PREFIX}-${timestamp}.json`;

@@ -1,6 +1,6 @@
 import { ClientRequestInterceptor } from '@mswjs/interceptors/lib/interceptors/ClientRequest';
-import { writeRequestsFile } from './report/requests';
-import { convertRequest, InterceptedRequest } from './request';
+import { storeRequests } from './io';
+import { parseRequest, InterceptedRequest } from './parser';
 
 const interceptor = new ClientRequestInterceptor();
 const requests: InterceptedRequest[] = [];
@@ -10,12 +10,12 @@ export const requestInterceptor = {
     interceptor.apply();
 
     interceptor.on('request', async (req) => {
-      requests.push(await convertRequest(req));
+      requests.push(await parseRequest(req));
     });
   },
   teardown: async () => {
     interceptor.dispose();
 
-    await writeRequestsFile(requests);
+    await storeRequests(requests);
   },
 };

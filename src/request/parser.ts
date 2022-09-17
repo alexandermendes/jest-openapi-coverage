@@ -25,7 +25,7 @@ const getBody = async (
   return req.text();
 };
 
-export const convertRequest = async (req: InteractiveIsomorphicRequest) => ({
+export const parseRequest = async (req: InteractiveIsomorphicRequest) => ({
   method: req.method,
   pathname: req.url.pathname,
   query: req.url.search,

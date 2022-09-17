@@ -11,8 +11,7 @@ yalc.lock
 dist/
 
 # Coverage
-coverage/
-!src/coverage/
+/coverage/
 
 # IDE
 .idea/
