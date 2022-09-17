@@ -12,6 +12,7 @@ dist/
 
 # Coverage
 coverage/
+!src/coverage/
 
 # IDE
 .idea/

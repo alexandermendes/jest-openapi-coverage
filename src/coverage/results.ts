@@ -9,7 +9,7 @@ import {
   ReferenceObject,
   ServerObject,
 } from 'openapi3-ts';
-import { InterceptedRequest } from './request';
+import { InterceptedRequest } from '../request';
 
 type QueryParamCoverageResult = {
   name: string;
@@ -98,7 +98,7 @@ const isParameterObject = (
   ('in' in obj) && obj.in === 'query'
 );
 
-const getCoverageResults = (
+export const getCoverageResults = (
   docs: OpenAPIObject,
   requests: InterceptedRequest[],
 ): CoverageResult[] => {

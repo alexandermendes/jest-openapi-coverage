@@ -73,8 +73,8 @@ for example:
 ```js
 const { globalSetup } = require('jest-openapi-coverage');
 
-module.exports = () => {
-  globalSetup();
+module.exports = (globalSetup) => {
+  globalSetup(globalSetup);
 };
 ```
 

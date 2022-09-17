@@ -1,4 +1,4 @@
-import { reportCoverage } from './coverage';
+import { reportCoverage } from './coverage/results';
 import { readDocs } from './report/docs';
 import { loadRequests } from './report/requests';
 
