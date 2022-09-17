@@ -1,3 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`Table concatenates many uncovered queries 1`] = `"param0, param1, param2, param3, param4, param5, param6, param7, param8, param9, param10..."`;

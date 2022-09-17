@@ -1,9 +1,9 @@
 import { Table } from 'console-table-printer';
-import { printTable } from '../../src/coverage/table';
+import { printTable } from '../../../src/coverage/reporters/table';
 
 jest.mock('console-table-printer');
 
-describe('Table', () => {
+describe('Coverage: Table Reporter', () => {
   it('sets up and prints the table', () => {
     printTable([
       {

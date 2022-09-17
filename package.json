@@ -67,11 +67,14 @@
     "app-root-path": "^3.1.0",
     "chalk": "^4.0.0",
     "console-table-printer": "^2.11.1",
+    "cosmiconfig": "^7.0.1",
+    "cosmiconfig-typescript-loader": "^4.1.0",
     "fs-extra": "^10.1.0",
     "jest-config": "^29.0.3",
     "openapi3-ts": "^3.0.2",
     "qs": "^6.11.0",
     "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
     "yargs": "^17.5.1"
   }
 }

@@ -1,5 +1,5 @@
 import { Table } from 'console-table-printer';
-import { CoverageResult } from './results';
+import { CoverageResult } from '../results';
 
 enum RowColours {
   red = 'red',

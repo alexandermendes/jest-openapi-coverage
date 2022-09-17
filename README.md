@@ -60,7 +60,45 @@ beforeAll(async () => {
 
 ## Configuration
 
-TODO!
+You can configure the coverage reporter by placing a file called
+`jest-openapi-coverage.config.js|ts|cjs|json` in the root of your repository,
+for example:
+
+```js
+const config = {
+  format: ['json'],
+  outputFile: 'oapi-coverage.json',
+};
+
+module.exports = config;
+```
+
+Or using TypeScript:
+
+```ts
+import { JestOpenApiCoverageConfig } from 'jest-openapi-coverage';
+
+const config: JestOpenApiCoverageConfig = {
+  format: ['json'],
+  outputFile: 'oapi-coverage.json',
+};
+
+export default config;
+```
+
+The available configuration options are described below.
+
+### `format` array<string>
+
+Default: `['table']`
+
+Specify the output format. The options are `table` and `json`.
+
+### `outputFile`
+
+Default: `undefined`
+
+A path to the JSON report. Applies only when the `format` is `json`.
 
 ## Manual setup
 
