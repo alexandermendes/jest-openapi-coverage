@@ -1,5 +1,5 @@
 {
-  "name": "jest-openapi-reporter",
+  "name": "jest-openapi-coverage",
   "version": "1.0.0",
   "description": "A reporter for OpenAPI coverage.",
   "author": "Alex Mendes",
@@ -14,11 +14,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alexandermendes/jest-openapi-reporter.git"
+    "url": "git+https://github.com/alexandermendes/jest-openapi-coverage.git"
   },
-  "homepage": "https://github.com/alexandermendes/jest-openapi-reporter#readme",
+  "homepage": "https://github.com/alexandermendes/jest-openapi-coverage#readme",
   "bugs": {
-    "url": "https://github.com/alexandermendes/jest-openapi-reporter/issues"
+    "url": "https://github.com/alexandermendes/jest-openapi-coverage/issues"
   },
   "files": [
     "src",
