@@ -21,6 +21,7 @@ type CoverageResult = {
   method: string;
   covered: boolean;
   queryParams: QueryParamCoverageResult[];
+  percentageOfQueriesCovered: number;
 }
 
 const table = new Table({
@@ -98,6 +99,25 @@ const isParameterObject = (
   ('in' in obj) && obj.in === 'query'
 );
 
+const getPercentageOfQueriesCovered = (
+  queryParams: QueryParamCoverageResult[],
+): number => {
+  const uncoveredQueryParams = queryParams.filter(({ covered }) => !covered);
+  const nUncoveredQueryParams = uncoveredQueryParams.length;
+  const nQueryParams = queryParams.length;
+  const hasQueryParams = !!nQueryParams;
+
+  if (!nUncoveredQueryParams) {
+    return 100;
+  }
+
+  if (hasQueryParams && nQueryParams === nUncoveredQueryParams) {
+    return 0;
+  }
+
+  return (nUncoveredQueryParams / nQueryParams) * 100;
+};
+
 export const getCoverageResults = (
   docs: OpenAPIObject,
   requests: InterceptedRequest[],
@@ -126,7 +146,7 @@ export const getCoverageResults = (
           .parameters
           ?.filter(isParameterObject) ?? [];
 
-        const flatQueryParameters = parameterObjects
+        const documentedQueryParams = parameterObjects
           .reduce((acc, param) => {
             if (
               param.style === 'deepObject'
@@ -144,14 +164,17 @@ export const getCoverageResults = (
             return [...acc, param.name];
           }, [] as string[]) ?? [];
 
+        const queryParams = documentedQueryParams.map((name: string) => ({
+          name,
+          covered: matchingQueryParams.includes(name),
+        }));
+
         const result: CoverageResult = {
           path,
           method: operation,
           covered: !!matchingRequests.length,
-          queryParams: flatQueryParameters.map((name: string) => ({
-            name,
-            covered: matchingQueryParams.includes(name),
-          })),
+          queryParams: queryParams,
+          percentageOfQueriesCovered: getPercentageOfQueriesCovered(queryParams),
         };
 
         results.push(result);
@@ -159,66 +182,4 @@ export const getCoverageResults = (
   });
 
   return results;
-};
-
-const getRowColour = (
-  result: CoverageResult,
-  percentageQueriesCovered: number,
-) => {
-  if (!result.covered) {
-    return 'red';
-  }
-
-  if (percentageQueriesCovered < 100) {
-    return 'yellow';
-  }
-
-  return 'green';
-};
-
-const getPercentageQueriesCovered = (
-  nQueries: number,
-  nUncoveredQueries: number,
-): number => {
-  if (!nQueries) {
-    return 100;
-  }
-
-  const percentage = (100 * nUncoveredQueries) / nQueries;
-  const fixedPercentage = (percentage).toFixed(2);
-
-  return Number(fixedPercentage);
-};
-
-const addTableRow = (result: CoverageResult) => {
-  const uncoveredQueries = result
-    .queryParams
-    .filter(({ covered }) => !covered);
-
-  const percentageQueriesCovered = getPercentageQueriesCovered(
-    result.queryParams.length,
-    uncoveredQueries.length,
-  );
-
-  table.addRow({
-    method: result.method.toUpperCase(),
-    endpoint: result.path,
-    queries: percentageQueriesCovered,
-    uncovered: `${uncoveredQueries
-      .map(({ name }) => name)
-      .slice(0, 3)
-      .join(', ')}${uncoveredQueries.length > 3 ? '...' : ''}`,
-  }, {
-    color: getRowColour(result, percentageQueriesCovered),
-  });
-};
-
-export const reportCoverage = (
-  docs: OpenAPIObject,
-  requests: InterceptedRequest[],
-) => {
-  const results = getCoverageResults(docs, requests);
-
-  results.forEach(addTableRow);
-  table.printTable();
 };

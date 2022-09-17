@@ -97,6 +97,7 @@ describe('Coverage', () => {
         path: '/articles',
         method: 'get',
         covered: true,
+        percentageOfQueriesCovered: 0,
         queryParams: [
           { name: 'limit', covered: false },
           { name: 'offset', covered: false },
@@ -126,6 +127,7 @@ describe('Coverage', () => {
         path: '/articles',
         method: 'get',
         covered: true,
+        percentageOfQueriesCovered: 50,
         queryParams: [
           { name: 'limit', covered: true },
           { name: 'offset', covered: false },
@@ -135,6 +137,7 @@ describe('Coverage', () => {
         path: '/search',
         method: 'get',
         covered: true,
+        percentageOfQueriesCovered: 50,
         queryParams: [
           { name: 'filter[author]', covered: false },
           { name: 'filter[rating]', covered: true },
@@ -176,6 +179,7 @@ describe('Coverage', () => {
         path: '/articles',
         method: 'get',
         covered: true,
+        percentageOfQueriesCovered: 100,
         queryParams: [
           { name: 'limit', covered: true },
           { name: 'offset', covered: true },
@@ -185,18 +189,21 @@ describe('Coverage', () => {
         path: '/articles',
         method: 'post',
         covered: true,
+        percentageOfQueriesCovered: 100,
         queryParams: [],
       },
       {
         path: '/articles/{slug}',
         method: 'get',
         covered: true,
+        percentageOfQueriesCovered: 100,
         queryParams: [],
       },
       {
         path: '/search',
         method: 'get',
         covered: true,
+        percentageOfQueriesCovered: 100,
         queryParams: [
           { name: 'filter[author]', covered: true },
           { name: 'filter[rating]', covered: true },
