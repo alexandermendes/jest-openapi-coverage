@@ -43,8 +43,8 @@ module.exports = {
 ```
 
 You will also need to provide the OpenAPI docs that will be used to determine
-coverage, either via the configuration file (see below) or by loading it
-dynamically when your tests are running, for example:
+coverage. This can be done via the [`docsPath`](#docspath) configuration option
+or by loading it dynamically when your tests are running, for example:
 
 ```js
 import fetch from 'node-fetch';
@@ -88,17 +88,41 @@ export default config;
 
 The available configuration options are described below.
 
-### `format` array<string>
+### `docsPath`
+
+Default: `undefined`
+
+Specify the path to your JSON OpenAPI docs.
+
+```js
+module.exports = {
+  docsPath: './path/to/docs.json',
+};
+```
+
+### `format`
 
 Default: `['table']`
 
-Specify the output format. The options are `table` and `json`.
+Specify the output format(s). The options are `table` and `json`.
+
+```js
+module.exports = {
+  format: ['table', 'json'],
+};
+```
 
 ### `outputFile`
 
 Default: `undefined`
 
-A path to the JSON report. Applies only when the `format` is `json`.
+A path to the JSON report (applies only when the `format` is `json`).
+
+```js
+module.exports = {
+  outputFile: './path/to/output.json',
+};
+```
 
 ## Manual setup
 
@@ -106,7 +130,7 @@ If you already have Jest setup files that you want to reuse you can call the
 relevant `jest-openapi-coverage` functions from those files directly instead,
 for example:
 
-#### `globalSetup` file
+### `globalSetup` file
 
 ```js
 const { globalSetup } = require('jest-openapi-coverage');
@@ -116,7 +140,7 @@ module.exports = (globalSetup) => {
 };
 ```
 
-#### `globalTeardown` file
+### `globalTeardown` file
 
 ```js
 const { globalTeardown } = require('jest-openapi-coverage');
@@ -126,7 +150,7 @@ module.exports = () => {
 };
 ```
 
-#### `setupFilesAfterEnv` file
+### `setupFilesAfterEnv` file
 
 ```js
 const { requestInterceptor } = require('jest-openapi-coverage');
