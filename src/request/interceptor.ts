@@ -1,4 +1,6 @@
 import { ClientRequestInterceptor } from '@mswjs/interceptors/lib/interceptors/ClientRequest';
+import { getJestConfig } from '../config/jest';
+import { getOpenApiConfig } from '../config/openapi';
 import { storeRequests } from './io';
 import { parseRequest, InterceptedRequest } from './parser';
 
@@ -14,8 +16,13 @@ export const requestInterceptor = {
     });
   },
   teardown: async () => {
+    const jestConfig = await getJestConfig();
+    const { coverageDirectory } = getOpenApiConfig(jestConfig);
+
     interceptor.dispose();
 
-    await storeRequests(requests);
+    if (coverageDirectory) {
+      await storeRequests(coverageDirectory, requests);
+    }
   },
 };

@@ -12,7 +12,7 @@ export const globalTeardown = async (globalConfig: Config.GlobalConfig) => {
     return;
   }
 
-  const docs = await readDocs();
+  const docs = await readDocs(openApiConfig.coverageDirectory);
 
   if (!docs) {
     throw new Error(

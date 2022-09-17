@@ -1,10 +1,10 @@
-import type { OpenApiCoverageConfig } from '../config/openapi';
+import type { ConcreteJestOpenApiCoverageConfig } from '../config/openapi';
 import type { CoverageResult } from './results';
 import { printTable } from './reporters/table';
 import { printJson } from './reporters/json';
 
 export const reportCoverage = async (
-  config: OpenApiCoverageConfig,
+  config: ConcreteJestOpenApiCoverageConfig,
   results: CoverageResult[],
 ) => {
   if (config.format.includes('table')) {

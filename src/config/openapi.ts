@@ -1,23 +1,26 @@
+import type { Config } from '@jest/types';
 import path from 'path';
-import rimraf from 'rimraf';
 import appRoot from 'app-root-path';
 import { cosmiconfigSync } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
-import { getJestConfig } from './jest';
-import { Config } from '@jest/types';
 
 const COVERAGE_SUB_DIRECTORY = 'openapi';
 const OPENAPI_MODULE_NAME = 'jest-openapi-coverage';
 
-export type OpenApiCoverageConfig = {
-  format: ('table' | 'json')[];
+type Format = 'table' | 'json';
+
+export type JestOpenApiCoverageConfig = {
+  format?: Format[];
   outputFile?: string;
   docsPath?: string;
   enabled?: boolean;
+  coverageDirectory?: string;
 };
 
-const defaultConfig: OpenApiCoverageConfig = {
-  format: ['table'],
+export type ConcreteJestOpenApiCoverageConfig = JestOpenApiCoverageConfig & {
+  format: ('table' | 'json')[];
+  enabled: boolean;
+  coverageDirectory: string;
 };
 
 const getAbsolutePath = (relativeOrAbsolutePath: string) => (
@@ -27,7 +30,7 @@ const getAbsolutePath = (relativeOrAbsolutePath: string) => (
     : path.resolve(appRoot.path, relativeOrAbsolutePath)
 );
 
-const loadOpenApiConfig = (): OpenApiCoverageConfig => {
+const loadOpenApiConfig = (): JestOpenApiCoverageConfig => {
   const explorer = cosmiconfigSync(OPENAPI_MODULE_NAME, {
     searchPlaces: [
       'package.json',
@@ -44,38 +47,72 @@ const loadOpenApiConfig = (): OpenApiCoverageConfig => {
   const result = explorer.search(appRoot.path);
 
   if (result) {
-    return { ...defaultConfig, ...result.config };
+    return result.config;
   }
 
-  return defaultConfig;
+  return {};
+};
+
+const getFormat = (config: JestOpenApiCoverageConfig): Format[] => {
+  if (!config.format) {
+    return ['table'];
+  }
+
+  return config.format;
+};
+
+const getDocsPath = (config: JestOpenApiCoverageConfig): string | undefined => {
+  if (config.docsPath) {
+    return getAbsolutePath(config.docsPath);
+  }
+
+  return undefined;
+};
+
+const getOutputFile = (config: JestOpenApiCoverageConfig): string | undefined => {
+  if (config.outputFile) {
+    return getAbsolutePath(config.outputFile);
+  }
+
+  return undefined;
+};
+
+const getEnabled = (
+  config: JestOpenApiCoverageConfig,
+  jestGlobalConfig: Config.GlobalConfig,
+): boolean => {
+  if (!config.enabled && config.enabled !== false) {
+    return jestGlobalConfig.collectCoverage;
+  }
+
+  return config.enabled;
+};
+
+const getCoverageDirectory = (
+  config: JestOpenApiCoverageConfig,
+  jestGlobalConfig: Config.GlobalConfig,
+): string => {
+  if (config.coverageDirectory) {
+    return getAbsolutePath(config.coverageDirectory);
+  }
+
+  return path.join(
+    jestGlobalConfig.coverageDirectory,
+    COVERAGE_SUB_DIRECTORY,
+  );
 };
 
 export const getOpenApiConfig = (
   jestGlobalConfig: Config.GlobalConfig,
-): OpenApiCoverageConfig => {
+): ConcreteJestOpenApiCoverageConfig => {
   const config = loadOpenApiConfig();
 
-  if (config.docsPath) {
-    config.docsPath = getAbsolutePath(config.docsPath);
-  }
-
-  if (config.outputFile) {
-    config.outputFile = getAbsolutePath(config.outputFile);
-  }
-
-  if (!config.enabled && config.enabled !== false) {
-    config.enabled = jestGlobalConfig.collectCoverage;
-  }
-
-  return config;
-};
-
-export const getOpenApiCoverageDir = async (coverageDirectory?: string) => {
-  const coverageDir = coverageDirectory ?? (await getJestConfig()).coverageDirectory;
-
-  return path.join(coverageDir, COVERAGE_SUB_DIRECTORY);
-};
-
-export const cleanOpenApiCoverageDir = async (rootCoverageDir: string) => {
-  rimraf.sync(await getOpenApiCoverageDir(rootCoverageDir));
+  return {
+    ...config,
+    format: getFormat(config),
+    docsPath: getDocsPath(config),
+    outputFile: getOutputFile(config),
+    enabled: getEnabled(config, jestGlobalConfig),
+    coverageDirectory: getCoverageDirectory(config, jestGlobalConfig),
+  };
 };

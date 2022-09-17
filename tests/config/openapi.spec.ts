@@ -14,6 +14,7 @@ const explorer = {
 
 const globalConfig = {
   collectCoverage: true,
+  coverageDirectory: '/coverage',
 } as Config.GlobalConfig;
 
 describe('Config: OpenAPI', () => {
@@ -49,6 +50,7 @@ describe('Config: OpenAPI', () => {
       expect(config).toEqual({
         format: ['table'],
         enabled: true,
+        coverageDirectory: '/coverage/openapi',
       });
     });
 
@@ -65,6 +67,7 @@ describe('Config: OpenAPI', () => {
         format: ['table'],
         outputFile: '/path/to/docs.json',
         enabled: true,
+        coverageDirectory: '/coverage/openapi',
       });
     });
 
@@ -82,6 +85,7 @@ describe('Config: OpenAPI', () => {
         format: ['json'],
         outputFile: '/path/to/docs.json',
         enabled: true,
+        coverageDirectory: '/coverage/openapi',
       });
     });
 
@@ -104,6 +108,7 @@ describe('Config: OpenAPI', () => {
         format: ['json'],
         [key]: path.join(appRoot.path, relativePath),
         enabled: true,
+        coverageDirectory: '/coverage/openapi',
       });
     });
 
@@ -119,17 +124,56 @@ describe('Config: OpenAPI', () => {
       expect(config).toEqual({
         format: ['table'],
         enabled: false,
+        coverageDirectory: '/coverage/openapi',
       });
     });
 
     it('disables coverage based on the jest setting', () => {
       const config = getOpenApiConfig({
+        ...globalConfig,
         collectCoverage: false,
       } as Config.GlobalConfig);
 
       expect(config).toEqual({
         format: ['table'],
         enabled: false,
+        coverageDirectory: '/coverage/openapi',
+      });
+    });
+
+    it('returns an absolute coverageDirectory', () => {
+      const coverageDirectory = '/path/to/coverage';
+
+      explorer.search.mockReturnValue({
+        config: {
+          coverageDirectory,
+        },
+      });
+
+      const config = getOpenApiConfig(globalConfig);
+
+      expect(config).toEqual({
+        format: ['table'],
+        enabled: true,
+        coverageDirectory,
+      });
+    });
+
+    it('returns a relative coverageDirectory', () => {
+      const coverageDirectory = './path/to/coverage';
+
+      explorer.search.mockReturnValue({
+        config: {
+          coverageDirectory,
+        },
+      });
+
+      const config = getOpenApiConfig(globalConfig);
+
+      expect(config).toEqual({
+        format: ['table'],
+        enabled: true,
+        coverageDirectory: path.join(appRoot.path, coverageDirectory),
       });
     });
   });

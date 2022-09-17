@@ -1,6 +1,7 @@
 import fse from 'fs-extra';
+import rimraf from 'rimraf';
 import type { Config } from '@jest/types';
-import { cleanOpenApiCoverageDir, getOpenApiConfig } from './config/openapi';
+import { getOpenApiConfig } from './config/openapi';
 import { writeDocs } from './docs/io';
 
 export const globalSetup = (globalConfig: Config.GlobalConfig) => {
@@ -11,8 +12,11 @@ export const globalSetup = (globalConfig: Config.GlobalConfig) => {
   }
 
   if (openApiConfig.docsPath) {
-    writeDocs(fse.readJSONSync(openApiConfig.docsPath));
+    writeDocs(
+      openApiConfig.coverageDirectory,
+      fse.readJSONSync(openApiConfig.docsPath),
+    );
   }
 
-  cleanOpenApiCoverageDir(globalConfig.coverageDirectory);
+  rimraf.sync(openApiConfig.coverageDirectory);
 };

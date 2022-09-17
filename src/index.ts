@@ -1,6 +1,4 @@
-import { OpenApiCoverageConfig } from './config/openapi';
-
-export type JestOpenApiCoverageConfig = Partial<OpenApiCoverageConfig>;
+export { JestOpenApiCoverageConfig } from './config/openapi';
 
 export { globalSetup } from './global-setup';
 export { globalTeardown } from './global-teardown';

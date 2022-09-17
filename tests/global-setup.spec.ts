@@ -1,10 +1,12 @@
 import { Config } from '@jest/types';
 import fse from 'fs-extra';
-import { cleanOpenApiCoverageDir, getOpenApiConfig } from '../src/config/openapi';
+import rimraf from 'rimraf';
+import { getOpenApiConfig } from '../src/config/openapi';
 import { writeDocs } from '../src/docs/io';
 import { globalSetup } from '../src/global-setup';
 
 jest.mock('fs-extra');
+jest.mock('rimraf');
 jest.mock('../src/config/openapi');
 jest.mock('../src/docs/io');
 
@@ -15,14 +17,17 @@ const globalConfig = {
 
 describe('Global setup', () => {
   beforeEach(() => {
-    (getOpenApiConfig as jest.Mock).mockReturnValue({ enabled: true });
+    (getOpenApiConfig as jest.Mock).mockReturnValue({
+      enabled: true,
+      coverageDirectory: '/coverage',
+    });
   });
 
   it('cleans the coverage dir', () => {
     globalSetup(globalConfig);
 
-    expect(cleanOpenApiCoverageDir).toHaveBeenCalledTimes(1);
-    expect(cleanOpenApiCoverageDir).toHaveBeenCalledWith(globalConfig.coverageDirectory);
+    expect(rimraf.sync).toHaveBeenCalledTimes(1);
+    expect(rimraf.sync).toHaveBeenCalledWith('/coverage');
   });
 
   it('does not load docs from the config file by default', () => {
@@ -35,12 +40,16 @@ describe('Global setup', () => {
     const docsPath = '/docs.json';
 
     (fse.readJSONSync as jest.Mock).mockReturnValue({ mock: 'docs' });
-    (getOpenApiConfig as jest.Mock).mockReturnValue({ enabled: true, docsPath });
+    (getOpenApiConfig as jest.Mock).mockReturnValue({
+      enabled: true,
+      docsPath,
+      coverageDirectory: '/coverage',
+    });
 
     globalSetup(globalConfig);
 
     expect(writeDocs).toHaveBeenCalledTimes(1);
-    expect(writeDocs).toHaveBeenCalledWith({ mock: 'docs' });
+    expect(writeDocs).toHaveBeenCalledWith('/coverage', { mock: 'docs' });
   });
 
   it('does nothing if not enabled', () => {
@@ -53,6 +62,6 @@ describe('Global setup', () => {
     globalSetup(globalConfig);
 
     expect(writeDocs).not.toHaveBeenCalled();
-    expect(cleanOpenApiCoverageDir).not.toHaveBeenCalled();
+    expect(rimraf.sync).not.toHaveBeenCalled();
   });
 });

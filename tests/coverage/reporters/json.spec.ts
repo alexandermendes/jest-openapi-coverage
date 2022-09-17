@@ -1,5 +1,5 @@
 import fse from 'fs-extra';
-import { OpenApiCoverageConfig } from '../../../src/config/openapi';
+import { ConcreteJestOpenApiCoverageConfig } from '../../../src/config/openapi';
 import { printJson } from '../../../src/coverage/reporters/json';
 import { CoverageResult } from '../../../src/coverage/results';
 import { logger } from '../../../src/logger';
@@ -19,9 +19,9 @@ const results: CoverageResult[] = [
 
 describe('Coverage: JSON Reporter', () => {
   it('reports to the console if no outputFile is configured', () => {
-    const config: OpenApiCoverageConfig = {
+    const config = {
       format: ['json'],
-    };
+    } as ConcreteJestOpenApiCoverageConfig;
 
     printJson(results, config);
 
@@ -32,10 +32,10 @@ describe('Coverage: JSON Reporter', () => {
   });
 
   it('writes to a file if an outputFile is configured', () => {
-    const config: OpenApiCoverageConfig = {
+    const config = {
       format: ['json'],
       outputFile: '/path/to/output.json',
-    };
+    } as ConcreteJestOpenApiCoverageConfig;
 
     printJson(results, config);
 

@@ -88,6 +88,18 @@ export default config;
 
 The available configuration options are described below.
 
+### `coverageDirectory`
+
+Default: The value of `coverageDirectory` from the Jest config.
+
+Specifically an alternative directory to store the coverage reports.
+
+```js
+module.exports = {
+  coverageDirectory: '/path/to/coverage',
+};
+```
+
 ### `docsPath`
 
 Default: `undefined`
