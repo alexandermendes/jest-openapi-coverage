@@ -2,6 +2,13 @@ import { Table } from 'console-table-printer';
 import { printTable } from '../../../src/coverage/reporters/table';
 
 jest.mock('console-table-printer');
+jest.mock('chalk', () => ({
+  bold: {
+    redBright: (str: string) => `red(${str})`,
+    yellowBright: (str: string) => `yellow(${str})`,
+    greenBright: (str: string) => `green(${str})`,
+  },
+}));
 
 describe('Coverage: Table Reporter', () => {
   it('sets up and prints the table', () => {
@@ -50,16 +57,19 @@ describe('Coverage: Table Reporter', () => {
   });
 
   it.each`
-    covered  | percentage | color
-    ${true}  | ${100}     | ${'green'}
-    ${true}  | ${50}      | ${'yellow'}
-    ${false} | ${100}     | ${'red'}
+    covered  | percentage | primaryColor   | secondaryColor
+    ${true}  | ${100}     | ${'green'}     | ${'green'}
+    ${true}  | ${50}      | ${'green'}     | ${'yellow'}
+    ${false} | ${100}     | ${'red'}       | ${'green'}
+    ${false} | ${0}       | ${'red'}       | ${'red'}
+    ${true}  | ${0}       | ${'green'}     | ${'red'}
   `(
     'adds a $color table row for covered=$covered and percentage=$percentage',
     ({
       covered,
       percentage,
-      color,
+      primaryColor,
+      secondaryColor,
     }) => {
       printTable([
         {
@@ -76,12 +86,11 @@ describe('Coverage: Table Reporter', () => {
       expect(mockTable.addRow).toHaveBeenCalledTimes(1);
       expect(mockTable.addRow).toHaveBeenCalledWith(
         {
-          endpoint: '/articles',
-          method: 'GET',
-          queries: String(percentage),
-          uncoveredQueries: '',
+          endpoint: `${primaryColor}(/articles)`,
+          method: `${primaryColor}(GET)`,
+          queries: `${secondaryColor}(${percentage})`,
+          uncoveredQueries: `${secondaryColor}()`,
         },
-        { color },
       );
     },
   );
@@ -106,12 +115,11 @@ describe('Coverage: Table Reporter', () => {
     expect(mockTable.addRow).toHaveBeenCalledTimes(1);
     expect(mockTable.addRow).toHaveBeenCalledWith(
       {
-        endpoint: '/articles',
-        method: 'GET',
-        queries: '66.67',
-        uncoveredQueries: 'one, two',
+        endpoint: 'green(/articles)',
+        method: 'green(GET)',
+        queries: 'yellow(66.67)',
+        uncoveredQueries: 'yellow(one, two)',
       },
-      { color: 'yellow' },
     );
   });
 

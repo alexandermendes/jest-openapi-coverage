@@ -1,11 +1,6 @@
+import chalk from 'chalk';
 import { Table } from 'console-table-printer';
 import { CoverageResult } from '../results';
-
-enum RowColours {
-  red = 'red',
-  yellow = 'yellow',
-  green = 'green',
-}
 
 type TableColumnName =
   'method' |
@@ -21,23 +16,25 @@ type TableColumn = {
 
 type TableRow = { [key in TableColumnName]: string }
 
-type TableOptions = { color: RowColours }
-
 const MAX_WIDTH = 80;
 
-const getRowColour = (
-  result: CoverageResult,
-  percentageQueriesCovered: number,
+const colour = (
+  text: string,
+  conditon: boolean | number,
 ) => {
-  if (!result.covered) {
-    return RowColours.red;
+  if (typeof conditon === 'boolean') {
+    return conditon ? chalk.bold.greenBright(text) : chalk.bold.redBright(text);
   }
 
-  if (percentageQueriesCovered < 100) {
-    return RowColours.yellow;
+  if (conditon === 0) {
+    return chalk.bold.redBright(text);
   }
 
-  return RowColours.green;
+  if (conditon < 100) {
+    return chalk.bold.yellowBright(text);
+  }
+
+  return chalk.bold.greenBright(text);
 };
 
 const addTableRow = (table: Table, result: CoverageResult) => {
@@ -46,14 +43,14 @@ const addTableRow = (table: Table, result: CoverageResult) => {
     .filter(({ covered }) => !covered);
 
   const row: TableRow = {
-    method: result.method.toUpperCase(),
-    endpoint: result.path,
-    queries: result
+    method: colour(result.method.toUpperCase(), result.covered),
+    endpoint: colour(result.path, result.covered),
+    queries: colour(result
       .percentageOfQueriesCovered
       .toFixed(2)
       .replace(/0?0$/, '')
-      .replace(/\.$/, ''),
-    uncoveredQueries: `${uncoveredQueries
+      .replace(/\.$/, ''), result.percentageOfQueriesCovered),
+    uncoveredQueries: colour(`${uncoveredQueries
       .map(({ name }) => name)
       .reduce((acc, name) => {
         if (acc.length < MAX_WIDTH) {
@@ -65,14 +62,10 @@ const addTableRow = (table: Table, result: CoverageResult) => {
         }
 
         return acc;
-      }, '')}`,
+      }, '')}`, result.percentageOfQueriesCovered),
   };
 
-  const options: TableOptions = {
-    color: getRowColour(result, result.percentageOfQueriesCovered),
-  };
-
-  table.addRow(row, options);
+  table.addRow(row);
 };
 
 export const printTable = (results: CoverageResult[]) => {
