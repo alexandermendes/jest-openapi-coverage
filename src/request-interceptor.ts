@@ -1,5 +1,5 @@
 import { ClientRequestInterceptor } from '@mswjs/interceptors/lib/interceptors/ClientRequest';
-import { writeRequestsFile } from './report';
+import { writeRequestsFile } from './report/requests';
 import { convertRequest, InterceptedRequest } from './request';
 
 const interceptor = new ClientRequestInterceptor();

@@ -1,6 +1,6 @@
 import type { Config } from '@jest/types';
-import { cleanCoverageDir } from './report';
+import { cleanOpenApiCoverageDir } from './config/openapi';
 
 export const globalSetup = (globalConfig: Config.GlobalConfig) => {
-  cleanCoverageDir(globalConfig.coverageDirectory);
+  cleanOpenApiCoverageDir(globalConfig.coverageDirectory);
 };

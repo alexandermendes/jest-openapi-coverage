@@ -20,15 +20,9 @@ const getJestArgv = (): Config.Argv => {
   );
 };
 
-const getJestConfig = async () => {
+export const getJestConfig = async () => {
   const argv = getJestArgv();
   const options = await readConfig(argv, appRoot.path);
 
   return options.globalConfig;
-};
-
-export const getCoverageDirectory = async () => {
-  const jestConfig = await getJestConfig();
-
-  return jestConfig.coverageDirectory;
 };
