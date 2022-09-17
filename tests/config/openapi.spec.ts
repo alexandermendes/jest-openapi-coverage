@@ -1,3 +1,4 @@
+import type { Config } from '@jest/types';
 import appRoot from 'app-root-path';
 import path from 'path';
 import { cosmiconfigSync } from 'cosmiconfig';
@@ -11,6 +12,10 @@ const explorer = {
   search: jest.fn(),
 };
 
+const globalConfig = {
+  collectCoverage: true,
+} as Config.GlobalConfig;
+
 describe('Config: OpenAPI', () => {
   beforeEach(() => {
     (cosmiconfigSync as jest.Mock).mockReturnValue(explorer);
@@ -18,7 +23,7 @@ describe('Config: OpenAPI', () => {
 
   describe('getOpenApiConfig', () => {
     it('searches the app root for a config file', () => {
-      getOpenApiConfig();
+      getOpenApiConfig(globalConfig);
 
       expect(cosmiconfigSync).toHaveBeenCalledTimes(1);
       expect(cosmiconfigSync).toHaveBeenCalledWith('jest-openapi-coverage', {
@@ -39,10 +44,11 @@ describe('Config: OpenAPI', () => {
     });
 
     it('returns the default config if no config file exists', () => {
-      const config = getOpenApiConfig();
+      const config = getOpenApiConfig(globalConfig);
 
       expect(config).toEqual({
         format: ['table'],
+        enabled: true,
       });
     });
 
@@ -53,11 +59,12 @@ describe('Config: OpenAPI', () => {
         },
       });
 
-      const config = getOpenApiConfig();
+      const config = getOpenApiConfig(globalConfig);
 
       expect(config).toEqual({
         format: ['table'],
         outputFile: '/path/to/docs.json',
+        enabled: true,
       });
     });
 
@@ -69,11 +76,12 @@ describe('Config: OpenAPI', () => {
         },
       });
 
-      const config = getOpenApiConfig();
+      const config = getOpenApiConfig(globalConfig);
 
       expect(config).toEqual({
         format: ['json'],
         outputFile: '/path/to/docs.json',
+        enabled: true,
       });
     });
 
@@ -90,11 +98,38 @@ describe('Config: OpenAPI', () => {
         },
       });
 
-      const config = getOpenApiConfig();
+      const config = getOpenApiConfig(globalConfig);
 
       expect(config).toEqual({
         format: ['json'],
         [key]: path.join(appRoot.path, relativePath),
+        enabled: true,
+      });
+    });
+
+    it('disables coverage based on the enabled setting', () => {
+      explorer.search.mockReturnValue({
+        config: {
+          enabled: false,
+        },
+      });
+
+      const config = getOpenApiConfig(globalConfig);
+
+      expect(config).toEqual({
+        format: ['table'],
+        enabled: false,
+      });
+    });
+
+    it('disables coverage based on the jest setting', () => {
+      const config = getOpenApiConfig({
+        collectCoverage: false,
+      } as Config.GlobalConfig);
+
+      expect(config).toEqual({
+        format: ['table'],
+        enabled: false,
       });
     });
   });

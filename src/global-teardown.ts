@@ -1,12 +1,18 @@
+import type { Config } from '@jest/types';
 import { getOpenApiConfig } from './config/openapi';
 import { getCoverageResults } from './coverage/results';
 import { reportCoverage } from './coverage/report';
 import { readDocs } from './docs/io';
 import { loadRequests } from './request/io';
 
-export const globalTeardown = async () => {
+export const globalTeardown = async (globalConfig: Config.GlobalConfig) => {
+  const openApiConfig = getOpenApiConfig(globalConfig);
+
+  if (!openApiConfig.enabled) {
+    return;
+  }
+
   const docs = await readDocs();
-  const config = getOpenApiConfig();
 
   if (!docs) {
     throw new Error(
@@ -15,8 +21,8 @@ export const globalTeardown = async () => {
     );
   }
 
-  const requests = await loadRequests();
+  const requests = await loadRequests(globalConfig.coverageDirectory);
   const results = await getCoverageResults(docs, requests);
 
-  reportCoverage(config, results);
+  reportCoverage(openApiConfig, results);
 };

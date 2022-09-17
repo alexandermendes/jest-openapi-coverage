@@ -1,12 +1,13 @@
 import fse from 'fs-extra';
 import path from 'path';
-import { getOpenApiCoverageDir } from '../config/openapi';
 import { InterceptedRequest } from './parser';
 
 const REQUESTS_FILE_PREFIX = 'requests';
 
-export const storeRequests = async (requests: InterceptedRequest[]) => {
-  const coverageDir = await getOpenApiCoverageDir();
+export const storeRequests = async (
+  coverageDir: string,
+  requests: InterceptedRequest[],
+) => {
   const timestamp = new Date().getTime();
   const outputFileName = `${REQUESTS_FILE_PREFIX}-${timestamp}.json`;
   const outputPath = path.join(coverageDir, outputFileName);
@@ -15,8 +16,9 @@ export const storeRequests = async (requests: InterceptedRequest[]) => {
   fse.writeJsonSync(outputPath, requests);
 };
 
-export const loadRequests = async (): Promise<InterceptedRequest[]> => {
-  const coverageDir = await getOpenApiCoverageDir();
+export const loadRequests = async (
+  coverageDir: string,
+): Promise<InterceptedRequest[]> => {
   const requestFiles = fse
     .readdirSync(coverageDir, { withFileTypes: true })
     .filter((dirent) => !dirent.isDirectory())

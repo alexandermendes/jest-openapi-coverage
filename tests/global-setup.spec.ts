@@ -9,12 +9,13 @@ jest.mock('../src/config/openapi');
 jest.mock('../src/docs/io');
 
 const globalConfig = {
+  collectCoverage: true,
   coverageDirectory: '/coverage',
 } as Config.GlobalConfig;
 
 describe('Global setup', () => {
   beforeEach(() => {
-    (getOpenApiConfig as jest.Mock).mockReturnValue({});
+    (getOpenApiConfig as jest.Mock).mockReturnValue({ enabled: true });
   });
 
   it('cleans the coverage dir', () => {
@@ -30,15 +31,28 @@ describe('Global setup', () => {
     expect(writeDocs).not.toHaveBeenCalled();
   });
 
-  it('does not load docs from the config file if a docsPath was configured', () => {
+  it('loads docs from the config file if a docsPath was configured', () => {
     const docsPath = '/docs.json';
 
-    (getOpenApiConfig as jest.Mock).mockReturnValue({ docsPath });
     (fse.readJSONSync as jest.Mock).mockReturnValue({ mock: 'docs' });
+    (getOpenApiConfig as jest.Mock).mockReturnValue({ enabled: true, docsPath });
 
     globalSetup(globalConfig);
 
     expect(writeDocs).toHaveBeenCalledTimes(1);
     expect(writeDocs).toHaveBeenCalledWith({ mock: 'docs' });
+  });
+
+  it('does nothing if not enabled', () => {
+    (fse.readJSONSync as jest.Mock).mockReturnValue({ mock: 'docs' });
+    (getOpenApiConfig as jest.Mock).mockReturnValue({
+      enabled: false,
+      docsPath: '/docs.json',
+    });
+
+    globalSetup(globalConfig);
+
+    expect(writeDocs).not.toHaveBeenCalled();
+    expect(cleanOpenApiCoverageDir).not.toHaveBeenCalled();
   });
 });

@@ -4,7 +4,11 @@ import { cleanOpenApiCoverageDir, getOpenApiConfig } from './config/openapi';
 import { writeDocs } from './docs/io';
 
 export const globalSetup = (globalConfig: Config.GlobalConfig) => {
-  const openApiConfig = getOpenApiConfig();
+  const openApiConfig = getOpenApiConfig(globalConfig);
+
+  if (!openApiConfig.enabled) {
+    return;
+  }
 
   if (openApiConfig.docsPath) {
     writeDocs(fse.readJSONSync(openApiConfig.docsPath));

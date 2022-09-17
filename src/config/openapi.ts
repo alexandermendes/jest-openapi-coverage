@@ -4,6 +4,7 @@ import appRoot from 'app-root-path';
 import { cosmiconfigSync } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { getJestConfig } from './jest';
+import { Config } from '@jest/types';
 
 const COVERAGE_SUB_DIRECTORY = 'openapi';
 const OPENAPI_MODULE_NAME = 'jest-openapi-coverage';
@@ -12,6 +13,7 @@ export type OpenApiCoverageConfig = {
   format: ('table' | 'json')[];
   outputFile?: string;
   docsPath?: string;
+  enabled?: boolean;
 };
 
 const defaultConfig: OpenApiCoverageConfig = {
@@ -48,7 +50,9 @@ const loadOpenApiConfig = (): OpenApiCoverageConfig => {
   return defaultConfig;
 };
 
-export const getOpenApiConfig = (): OpenApiCoverageConfig => {
+export const getOpenApiConfig = (
+  jestGlobalConfig: Config.GlobalConfig,
+): OpenApiCoverageConfig => {
   const config = loadOpenApiConfig();
 
   if (config.docsPath) {
@@ -57,6 +61,10 @@ export const getOpenApiConfig = (): OpenApiCoverageConfig => {
 
   if (config.outputFile) {
     config.outputFile = getAbsolutePath(config.outputFile);
+  }
+
+  if (!config.enabled && config.enabled !== false) {
+    config.enabled = jestGlobalConfig.collectCoverage;
   }
 
   return config;
