@@ -1,4 +1,4 @@
-import { JestOpenApiCoverageConfig } from '../../src/config/openapi';
+import { OpenApiCoverageConfig } from '../../src/config/openapi';
 import { reportCoverage } from '../../src/coverage/report';
 import { printJson } from '../../src/coverage/reporters/json';
 import { printTable } from '../../src/coverage/reporters/table';
@@ -19,7 +19,7 @@ const results: CoverageResult[] = [
 
 describe('Coverage: Report', () => {
   it('reports using the table reporter', () => {
-    const config: JestOpenApiCoverageConfig = {
+    const config: OpenApiCoverageConfig = {
       format: ['table'],
     };
 
@@ -30,7 +30,7 @@ describe('Coverage: Report', () => {
   });
 
   it('reports using the json reporter', () => {
-    const config: JestOpenApiCoverageConfig = {
+    const config: OpenApiCoverageConfig = {
       format: ['json'],
     };
 

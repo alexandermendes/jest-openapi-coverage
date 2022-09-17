@@ -1,5 +1,5 @@
 import fse from 'fs-extra';
-import { JestOpenApiCoverageConfig } from '../../../src/config/openapi';
+import { OpenApiCoverageConfig } from '../../../src/config/openapi';
 import { printJson } from '../../../src/coverage/reporters/json';
 import { CoverageResult } from '../../../src/coverage/results';
 import { logger } from '../../../src/logger';
@@ -19,7 +19,7 @@ const results: CoverageResult[] = [
 
 describe('Coverage: JSON Reporter', () => {
   it('reports to the console if no outputFile is configured', () => {
-    const config: JestOpenApiCoverageConfig = {
+    const config: OpenApiCoverageConfig = {
       format: ['json'],
     };
 
@@ -32,7 +32,7 @@ describe('Coverage: JSON Reporter', () => {
   });
 
   it('writes to a file if an outputFile is configured', () => {
-    const config: JestOpenApiCoverageConfig = {
+    const config: OpenApiCoverageConfig = {
       format: ['json'],
       outputFile: '/path/to/output.json',
     };

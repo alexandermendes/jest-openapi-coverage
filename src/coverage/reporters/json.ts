@@ -1,12 +1,12 @@
 import fse from 'fs-extra';
 import path from 'path';
-import { JestOpenApiCoverageConfig } from '../../config/openapi';
+import { OpenApiCoverageConfig } from '../../config/openapi';
 import { CoverageResult } from '../results';
 import { logger } from '../../logger';
 
 export const printJson = (
   results: CoverageResult[],
-  config: JestOpenApiCoverageConfig,
+  config: OpenApiCoverageConfig,
 ) => {
   const { outputFile } = config;
 

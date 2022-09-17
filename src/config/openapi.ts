@@ -8,13 +8,13 @@ import { getJestConfig } from './jest';
 const COVERAGE_SUB_DIRECTORY = 'openapi';
 const OPENAPI_MODULE_NAME = 'jest-openapi-coverage';
 
-export type JestOpenApiCoverageConfig = {
+export type OpenApiCoverageConfig = {
   format: ('table' | 'json')[];
   outputFile?: string;
   docsPath?: string;
 };
 
-const defaultConfig: JestOpenApiCoverageConfig = {
+const defaultConfig: OpenApiCoverageConfig = {
   format: ['table'],
 };
 
@@ -25,7 +25,7 @@ const getAbsolutePath = (relativeOrAbsolutePath: string) => (
     : path.resolve(appRoot.path, relativeOrAbsolutePath)
 );
 
-const loadOpenApiConfig = (): JestOpenApiCoverageConfig => {
+const loadOpenApiConfig = (): OpenApiCoverageConfig => {
   const explorer = cosmiconfigSync(OPENAPI_MODULE_NAME, {
     searchPlaces: [
       'package.json',
@@ -48,7 +48,7 @@ const loadOpenApiConfig = (): JestOpenApiCoverageConfig => {
   return defaultConfig;
 };
 
-export const getOpenApiConfig = (): JestOpenApiCoverageConfig => {
+export const getOpenApiConfig = (): OpenApiCoverageConfig => {
   const config = loadOpenApiConfig();
 
   if (config.docsPath) {
