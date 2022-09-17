@@ -1,5 +1,3 @@
-import appRoot from 'app-root-path';
-import path from 'path';
 import fse from 'fs-extra';
 import { JestOpenApiCoverageConfig } from '../../../src/config/openapi';
 import { printJson } from '../../../src/coverage/reporters/json';
