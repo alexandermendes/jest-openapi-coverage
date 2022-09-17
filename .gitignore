@@ -4,6 +4,8 @@
 # Packages
 node_modules/
 *.tgz
+.yalc
+yalc.lock
 
 # Build
 dist/
