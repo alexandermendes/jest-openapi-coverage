@@ -1,36 +1,51 @@
 import { Table } from 'console-table-printer';
 import { CoverageResult } from './results';
 
-const table = new Table({
-  columns: [
-    { name: 'method', alignment: 'left', title: 'Method' },
-    { name: 'endpoint', alignment: 'left', title: 'Endpoint' },
-    { name: 'queries', alignment: 'right', title: '% Queries' },
-    { name: 'uncovered', alignment: 'left', title: 'Uncovered queries' },
-  ],
-});
+enum RowColours {
+  red = 'red',
+  yellow = 'yellow',
+  green = 'green',
+}
+
+type TableColumnName =
+  'method' |
+  'endpoint' |
+  'queries' |
+  'uncoveredQueries';
+
+type TableColumn = {
+  name: TableColumnName;
+  alignment: 'left' | 'center' | 'right';
+  title: string;
+}
+
+type TableRow = { [key in TableColumnName]: string }
+
+type TableOptions = { color: RowColours }
+
+const MAX_WIDTH = 80;
 
 const getRowColour = (
   result: CoverageResult,
   percentageQueriesCovered: number,
 ) => {
   if (!result.covered) {
-    return 'red';
+    return RowColours.red;
   }
 
   if (percentageQueriesCovered < 100) {
-    return 'yellow';
+    return RowColours.yellow;
   }
 
-  return 'green';
+  return RowColours.green;
 };
 
-const addTableRow = (result: CoverageResult) => {
+const addTableRow = (table: Table, result: CoverageResult) => {
   const uncoveredQueries = result
     .queryParams
     .filter(({ covered }) => !covered);
 
-  table.addRow({
+  const row: TableRow = {
     method: result.method.toUpperCase(),
     endpoint: result.path,
     queries: result
@@ -38,11 +53,11 @@ const addTableRow = (result: CoverageResult) => {
       .toFixed(2)
       .replace(/0?0$/, '')
       .replace(/\.$/, ''),
-    uncovered: `${uncoveredQueries
+    uncoveredQueries: `${uncoveredQueries
       .map(({ name }) => name)
       .reduce((acc, name) => {
-        if (acc.length < 80) {
-          return [acc, name].filter(str => str).join(', ');
+        if (acc.length < MAX_WIDTH) {
+          return [acc, name].filter((str) => str).join(', ');
         }
 
         if (!acc.endsWith('...')) {
@@ -51,12 +66,25 @@ const addTableRow = (result: CoverageResult) => {
 
         return acc;
       }, '')}`,
-  }, {
+  };
+
+  const options: TableOptions = {
     color: getRowColour(result, result.percentageOfQueriesCovered),
-  });
+  };
+
+  table.addRow(row, options);
 };
 
 export const printTable = (results: CoverageResult[]) => {
-  results.forEach(addTableRow);
+  const columns: TableColumn[] = [
+    { name: 'method', alignment: 'left', title: 'Method' },
+    { name: 'endpoint', alignment: 'left', title: 'Endpoint' },
+    { name: 'queries', alignment: 'right', title: '% Queries' },
+    { name: 'uncoveredQueries', alignment: 'left', title: 'Uncovered queries' },
+  ];
+
+  const table = new Table({ columns });
+
+  results.forEach((result) => addTableRow(table, result));
   table.printTable();
 };

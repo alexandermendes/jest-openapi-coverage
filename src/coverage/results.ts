@@ -1,4 +1,3 @@
-import { Table } from 'console-table-printer';
 import qs from 'qs';
 import {
   isSchemaObject,
@@ -164,7 +163,7 @@ export const getCoverageResults = (
           path,
           method: operation,
           covered: !!matchingRequests.length,
-          queryParams: queryParams,
+          queryParams,
           percentageOfQueriesCovered: getPercentageOfQueriesCovered(queryParams),
         };
 
