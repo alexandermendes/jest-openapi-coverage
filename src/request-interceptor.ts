@@ -1,19 +1,21 @@
-import { InterceptedRequest, RequestInterceptor } from 'node-request-interceptor';
-import withDefaultInterceptors from 'node-request-interceptor/lib/presets/default';
+import { ClientRequestInterceptor } from '@mswjs/interceptors/lib/interceptors/ClientRequest';
 import { writeRequestsFile } from './report';
+import { convertRequest, InterceptedRequest } from './request';
 
-const interceptor = new RequestInterceptor(withDefaultInterceptors);
+const interceptor = new ClientRequestInterceptor();
 const requests: InterceptedRequest[] = [];
 
 export const requestInterceptor = {
   setup: async () => {
-    interceptor.use((req) => {
-      requests.push(req);
+    interceptor.apply();
+
+    interceptor.on('request', async (req) => {
+      requests.push(await convertRequest(req));
     });
   },
   teardown: async () => {
-    const { testPath } = expect.getState();
+    interceptor.dispose();
 
-    await writeRequestsFile(requests, testPath);
+    await writeRequestsFile(requests);
   },
 };

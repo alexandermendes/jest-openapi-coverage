@@ -1,9 +1,8 @@
 import fse from 'fs-extra';
-import { InterceptedRequest } from 'node-request-interceptor';
 import path from 'path';
 import rimraf from 'rimraf';
-import stringHash from 'string-hash';
 import { getCoverageDirectory } from './config';
+import { InterceptedRequest } from './request';
 
 const REQUESTS_FILE_PREFIX = 'requests';
 const COVERAGE_SUB_DIRECTORY = 'openapi';
@@ -37,13 +36,10 @@ export const cleanCoverageDir = async (rootCoverageDir?: string) => {
   rimraf.sync(await getOpenApiCoverageDir(rootCoverageDir));
 };
 
-export const writeRequestsFile = async (
-  requests: InterceptedRequest[],
-  testPath: string,
-) => {
+export const writeRequestsFile = async (requests: InterceptedRequest[]) => {
   const coverageDir = await getOpenApiCoverageDir();
-  const testHash = stringHash(testPath);
-  const outputFileName = `${REQUESTS_FILE_PREFIX}-${testHash}.json`;
+  const timestamp = new Date().getTime();
+  const outputFileName = `${REQUESTS_FILE_PREFIX}-${timestamp}.json`;
   const outputPath = path.join(coverageDir, outputFileName);
 
   fse.ensureDirSync(path.dirname(outputPath));
