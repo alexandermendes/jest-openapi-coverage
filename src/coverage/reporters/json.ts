@@ -1,4 +1,3 @@
-import appRoot from 'app-root-path';
 import fse from 'fs-extra';
 import path from 'path';
 import { JestOpenApiCoverageConfig } from '../../config/openapi';
@@ -17,10 +16,6 @@ export const printJson = (
     return;
   }
 
-  const outputPath = path.isAbsolute(outputFile)
-    ? outputFile
-    : path.resolve(appRoot.path, outputFile);
-
-  fse.ensureDirSync(path.dirname(outputPath));
-  fse.writeJSONSync(outputPath, results);
+  fse.ensureDirSync(path.dirname(outputFile));
+  fse.writeJSONSync(outputFile, results);
 };

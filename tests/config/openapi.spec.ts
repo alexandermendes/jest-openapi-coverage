@@ -1,4 +1,5 @@
 import appRoot from 'app-root-path';
+import path from 'path';
 import { cosmiconfigSync } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
 import { getOpenApiConfig } from '../../src/config/openapi';
@@ -73,6 +74,27 @@ describe('Config: OpenAPI', () => {
       expect(config).toEqual({
         format: ['json'],
         outputFile: '/path/to/docs.json',
+      });
+    });
+
+    it.each([
+      'outputFile',
+      'docsPath',
+    ])('converts a relative %s path to an absolute path', (key) => {
+      const relativePath = './relative/path.json';
+
+      explorer.search.mockReturnValue({
+        config: {
+          format: ['json'],
+          [key]: './relative/path.json',
+        },
+      });
+
+      const config = getOpenApiConfig();
+
+      expect(config).toEqual({
+        format: ['json'],
+        [key]: path.join(appRoot.path, relativePath),
       });
     });
   });

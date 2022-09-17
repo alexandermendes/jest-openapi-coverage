@@ -33,7 +33,7 @@ describe('Coverage: JSON Reporter', () => {
     expect(fse.writeJSONSync).not.toHaveBeenCalled();
   });
 
-  it('writes to a file if an absolute outputFile is configured', () => {
+  it('writes to a file if an outputFile is configured', () => {
     const config: JestOpenApiCoverageConfig = {
       format: ['json'],
       outputFile: '/path/to/output.json',
@@ -47,27 +47,6 @@ describe('Coverage: JSON Reporter', () => {
     expect(fse.writeJSONSync).toHaveBeenCalledTimes(1);
     expect(fse.writeJSONSync).toHaveBeenCalledWith(
       '/path/to/output.json',
-      results,
-    );
-
-    expect(logger.log).not.toHaveBeenCalled();
-  });
-
-  it('writes to a file if an relative outputFile is configured', () => {
-    const outputFile = './output.json';
-    const config: JestOpenApiCoverageConfig = {
-      format: ['json'],
-      outputFile: './output.json',
-    };
-
-    printJson(results, config);
-
-    expect(fse.ensureDirSync).toHaveBeenCalledTimes(1);
-    expect(fse.ensureDirSync).toHaveBeenCalledWith(appRoot.path);
-
-    expect(fse.writeJSONSync).toHaveBeenCalledTimes(1);
-    expect(fse.writeJSONSync).toHaveBeenCalledWith(
-      path.join(appRoot.path, outputFile),
       results,
     );
 
