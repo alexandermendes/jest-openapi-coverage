@@ -5,12 +5,11 @@ import yargs from 'yargs';
 
 const getJestArgv = (): Config.Argv => {
   const rawArgv: string[] = process.argv.slice(2);
-  const argv = yargs(rawArgv);
+  const argv = yargs(rawArgv).parseSync();
 
   return Object.keys(argv).reduce(
     (acc, key) => {
       if (!key.includes('-')) {
-        // @ts-ignore
         acc[key] = argv[key];
       }
 
