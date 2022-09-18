@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/alexandermendes/jest-openapi-coverage/compare/v1.0.0...v1.1.0) (2022-09-18)
+
+
+### Features
+
+* add coverageThreshold setting ([0e85f25](https://github.com/alexandermendes/jest-openapi-coverage/commit/0e85f25f49beee37a4e3f76f141741a5757d86cb))
+
 # 1.0.0 (2022-09-17)
 
 
