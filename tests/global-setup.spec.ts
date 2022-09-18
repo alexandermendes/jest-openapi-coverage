@@ -18,7 +18,7 @@ const globalConfig = {
 describe('Global setup', () => {
   beforeEach(() => {
     (getOpenApiConfig as jest.Mock).mockReturnValue({
-      enabled: true,
+      collectCoverage: true,
       coverageDirectory: '/coverage/openapi',
     });
   });
@@ -41,7 +41,7 @@ describe('Global setup', () => {
 
     (fse.readJSONSync as jest.Mock).mockReturnValue({ mock: 'docs' });
     (getOpenApiConfig as jest.Mock).mockReturnValue({
-      enabled: true,
+      collectCoverage: true,
       docsPath,
       coverageDirectory: '/coverage/openapi',
     });
@@ -55,7 +55,7 @@ describe('Global setup', () => {
   it('does nothing if not enabled', () => {
     (fse.readJSONSync as jest.Mock).mockReturnValue({ mock: 'docs' });
     (getOpenApiConfig as jest.Mock).mockReturnValue({
-      enabled: false,
+      collectCoverage: false,
       docsPath: '/docs.json',
     });
 

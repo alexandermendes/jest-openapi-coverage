@@ -9,7 +9,7 @@ import { checkThresholds } from './coverage/thresholds';
 export const globalTeardown = async (globalConfig: Config.GlobalConfig) => {
   const openApiConfig = getOpenApiConfig(globalConfig);
 
-  if (!openApiConfig.enabled) {
+  if (!openApiConfig.collectCoverage) {
     return;
   }
 

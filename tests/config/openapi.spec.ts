@@ -49,7 +49,7 @@ describe('Config: OpenAPI', () => {
 
       expect(config).toEqual({
         format: ['table'],
-        enabled: true,
+        collectCoverage: true,
         coverageDirectory: '/coverage/openapi',
       });
     });
@@ -66,7 +66,7 @@ describe('Config: OpenAPI', () => {
       expect(config).toEqual({
         format: ['table'],
         outputFile: '/path/to/docs.json',
-        enabled: true,
+        collectCoverage: true,
         coverageDirectory: '/coverage/openapi',
       });
     });
@@ -84,7 +84,7 @@ describe('Config: OpenAPI', () => {
       expect(config).toEqual({
         format: ['json'],
         outputFile: '/path/to/docs.json',
-        enabled: true,
+        collectCoverage: true,
         coverageDirectory: '/coverage/openapi',
       });
     });
@@ -107,15 +107,15 @@ describe('Config: OpenAPI', () => {
       expect(config).toEqual({
         format: ['json'],
         [key]: path.join(appRoot.path, relativePath),
-        enabled: true,
+        collectCoverage: true,
         coverageDirectory: '/coverage/openapi',
       });
     });
 
-    it('disables coverage based on the enabled setting', () => {
+    it('disables coverage based on the collectCoverage setting', () => {
       explorer.search.mockReturnValue({
         config: {
-          enabled: false,
+          collectCoverage: false,
         },
       });
 
@@ -123,7 +123,7 @@ describe('Config: OpenAPI', () => {
 
       expect(config).toEqual({
         format: ['table'],
-        enabled: false,
+        collectCoverage: false,
         coverageDirectory: '/coverage/openapi',
       });
     });
@@ -136,7 +136,7 @@ describe('Config: OpenAPI', () => {
 
       expect(config).toEqual({
         format: ['table'],
-        enabled: false,
+        collectCoverage: false,
         coverageDirectory: '/coverage/openapi',
       });
     });
@@ -154,7 +154,7 @@ describe('Config: OpenAPI', () => {
 
       expect(config).toEqual({
         format: ['table'],
-        enabled: true,
+        collectCoverage: true,
         coverageDirectory,
       });
     });
@@ -172,7 +172,7 @@ describe('Config: OpenAPI', () => {
 
       expect(config).toEqual({
         format: ['table'],
-        enabled: true,
+        collectCoverage: true,
         coverageDirectory: path.join(appRoot.path, coverageDirectory),
       });
     });

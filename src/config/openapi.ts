@@ -19,7 +19,7 @@ export type JestOpenApiCoverageConfig = {
   format?: Format[];
   outputFile?: string;
   docsPath?: string;
-  enabled?: boolean;
+  collectCoverage?: boolean;
   coverageDirectory?: string;
   coverageThreshold?: CoverageThreshold;
   server?: {
@@ -30,7 +30,7 @@ export type JestOpenApiCoverageConfig = {
 
 export type ConcreteJestOpenApiCoverageConfig = JestOpenApiCoverageConfig & {
   format: ('table' | 'json')[];
-  enabled: boolean;
+  collectCoverage: boolean;
   coverageDirectory: string;
 };
 
@@ -88,15 +88,15 @@ const getOutputFile = (config: JestOpenApiCoverageConfig): string | undefined =>
   return undefined;
 };
 
-const getEnabled = (
+const getCollectCoverage = (
   config: JestOpenApiCoverageConfig,
   jestGlobalConfig: Config.GlobalConfig,
 ): boolean => {
-  if (!config.enabled && config.enabled !== false) {
+  if (!config.collectCoverage && config.collectCoverage !== false) {
     return jestGlobalConfig.collectCoverage;
   }
 
-  return config.enabled;
+  return config.collectCoverage;
 };
 
 const getCoverageDirectory = (
@@ -123,7 +123,7 @@ export const getOpenApiConfig = (
     format: getFormat(config),
     docsPath: getDocsPath(config),
     outputFile: getOutputFile(config),
-    enabled: getEnabled(config, jestGlobalConfig),
+    collectCoverage: getCollectCoverage(config, jestGlobalConfig),
     coverageDirectory: getCoverageDirectory(config, jestGlobalConfig),
   };
 };

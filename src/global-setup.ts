@@ -7,7 +7,7 @@ import { writeDocs } from './docs/io';
 export const globalSetup = (globalConfig: Config.GlobalConfig) => {
   const openApiConfig = getOpenApiConfig(globalConfig);
 
-  if (!openApiConfig.enabled) {
+  if (!openApiConfig.collectCoverage) {
     return;
   }
 

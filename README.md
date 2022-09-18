@@ -127,7 +127,7 @@ module.exports = {
 };
 ```
 
-### `enabled`
+### `collectCoverage`
 
 Default: The value of `collectCoverage` from the Jest config.
 
@@ -135,7 +135,7 @@ Specifically enable or disable coverage for all test runs.
 
 ```js
 module.exports = {
-  enabled: true,
+  collectCoverage: true,
 };
 ```
 
