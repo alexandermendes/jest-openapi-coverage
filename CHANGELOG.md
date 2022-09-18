@@ -1,3 +1,16 @@
+# [1.2.0](https://github.com/alexandermendes/jest-openapi-coverage/compare/v1.1.0...v1.2.0) (2022-09-18)
+
+
+### Bug Fixes
+
+* do not bother storing empty request files ([785deec](https://github.com/alexandermendes/jest-openapi-coverage/commit/785deecabf20d63d658b698a7c93b654462f5719))
+
+
+### Features
+
+* improve automatic request matching and add servers setting ([1c21faa](https://github.com/alexandermendes/jest-openapi-coverage/commit/1c21faa3efff3a5096a1e88a99b68967d7f62b33))
+* read request files asynchonously ([dfd93c8](https://github.com/alexandermendes/jest-openapi-coverage/commit/dfd93c81522f8a9947a22c774c063a545ac21f0c))
+
 # [1.1.0](https://github.com/alexandermendes/jest-openapi-coverage/compare/v1.0.0...v1.1.0) (2022-09-18)
 
 
