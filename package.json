@@ -1,6 +1,6 @@
 {
   "name": "jest-openapi-coverage",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Report OpenAPI coverage for Jest integration tests.",
   "author": "Alex Mendes",
   "license": "ISC",
