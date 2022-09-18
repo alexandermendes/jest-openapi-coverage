@@ -12,6 +12,10 @@ export const storeRequests = async (
   const outputFileName = `${REQUESTS_FILE_PREFIX}-${timestamp}.json`;
   const outputPath = path.join(coverageDir, outputFileName);
 
+  if (!requests.length) {
+    return;
+  }
+
   fse.ensureDirSync(path.dirname(outputPath));
   fse.writeJsonSync(outputPath, requests);
 };
