@@ -423,6 +423,32 @@ describe('Coverage', () => {
 
       expect(results.filter(({ covered }) => covered)).toHaveLength(0);
     });
+
+    it('decodes any URL-encoded query params', () => {
+      const { results } = getCoverageResults(openApiDocs, [
+        {
+          method: 'get',
+          pathname: '/search',
+          query: '?filter%5Bauthor%5D=joebloggs&filter%5Brating%5D=5',
+          body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
+        },
+      ], emptyOpenApiConfig);
+
+      expect(results.filter(({ covered }) => covered)).toEqual([
+        {
+          path: '/search',
+          method: 'get',
+          covered: true,
+          percentageOfQueriesCovered: 100,
+          queryParams: [
+            { name: 'filter[author]', covered: true },
+            { name: 'filter[rating]', covered: true },
+          ],
+        },
+      ]);
+    });
   });
 
   describe('totals', () => {
