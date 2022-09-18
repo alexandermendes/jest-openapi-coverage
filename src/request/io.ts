@@ -29,9 +29,11 @@ export const loadRequests = async (
     .filter((dirent) => dirent.name.startsWith(REQUESTS_FILE_PREFIX))
     .map((dirent) => path.join(coverageDir, dirent.name));
 
-  return requestFiles.reduce((acc, requestFile) => {
-    const parsedRequests = fse.readJSONSync(requestFile);
+  const parsedRequests: InterceptedRequest[] = [];
 
-    return [...acc, ...parsedRequests];
-  }, [] as InterceptedRequest[]);
+  await Promise.all(requestFiles.map(async (requestFile) => {
+    parsedRequests.push(...(await fse.readJSON(requestFile)));
+  }));
+
+  return parsedRequests;
 };
