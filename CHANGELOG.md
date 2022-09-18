@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/alexandermendes/jest-openapi-coverage/compare/v1.2.0...v1.2.1) (2022-09-18)
+
+
+### Bug Fixes
+
+* rename enabled setting to collectCoverage ([6762269](https://github.com/alexandermendes/jest-openapi-coverage/commit/676226999e5dc3fe0b83fad213ec48e2c272610e))
+
 # [1.2.0](https://github.com/alexandermendes/jest-openapi-coverage/compare/v1.1.0...v1.2.0) (2022-09-18)
 
 
