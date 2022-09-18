@@ -9,12 +9,15 @@ import {
   ServerObject,
 } from 'openapi3-ts';
 import { InterceptedRequest } from '../request/parser';
+import {
+  ConcreteJestOpenApiCoverageConfig,
+  CoverageThresholdMetric,
+} from '../config/openapi';
 
 type QueryParamCoverageResult = {
   name: string;
   covered: boolean;
-};
-export type CoverageThresholdMetric = 'operations' | 'queryParameters';
+}
 
 export type CoverageResult = {
   path: string;
@@ -55,9 +58,24 @@ const isPathMatchingWithServers = (
     return isPathMatching(openApiPath, strippedPath);
   });
 
+const isServerMatching = (
+  request: InterceptedRequest,
+  hostname: string,
+  port?: number,
+) => {
+  const hostnameMatches = hostname === request.hostname;
+
+  if (!port && hostnameMatches) {
+    return true;
+  }
+
+  return Number(port) === Number(request.port);
+};
+
 const getMatchingRequests = (
   docs: OpenAPIObject,
   requests: InterceptedRequest[],
+  openApiConfig: ConcreteJestOpenApiCoverageConfig,
   path: string,
   method: string,
   methodConfig: OperationObject,
@@ -66,11 +84,25 @@ const getMatchingRequests = (
     return false;
   }
 
-  return (
+  const pathMatches = (
     isPathMatching(path, request.pathname)
     || isPathMatchingWithServers(path, request.pathname, methodConfig.servers)
     || isPathMatchingWithServers(path, request.pathname, docs.servers)
   );
+
+  if (!pathMatches) {
+    return false;
+  }
+
+  if (openApiConfig.server) {
+    return isServerMatching(
+      request,
+      openApiConfig.server.hostname,
+      openApiConfig.server.port,
+    );
+  }
+
+  return ['127.0.0.1', 'localhost'].includes(request.hostname);
 });
 
 const getMatchingQueryParams = (
@@ -115,6 +147,7 @@ const getPercentageCovered = (
 export const getCoverageResults = (
   docs: OpenAPIObject,
   requests: InterceptedRequest[],
+  openApiConfig: ConcreteJestOpenApiCoverageConfig,
 ): CoverageResults => {
   const results: CoverageResult[] = [];
 
@@ -132,6 +165,7 @@ export const getCoverageResults = (
         const matchingRequests = getMatchingRequests(
           docs,
           requests,
+          openApiConfig,
           path,
           operation,
           operationConfig,

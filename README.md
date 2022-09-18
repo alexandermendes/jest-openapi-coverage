@@ -163,6 +163,23 @@ module.exports = {
 };
 ```
 
+### `servers`
+
+Default: `undefined`
+
+The server to consider for intercepted requests. By default we consider requests
+to `127.0.0.1` or `localhost` as being requests to your API. To target an
+alternative server you can do something like the following:
+
+```js
+module.exports = {
+  server: {
+    hostname: 'example.com',
+    port: 3000, // optional
+  }
+};
+```
+
 ## Manual setup
 
 If you already have Jest setup files that you want to reuse you can call the

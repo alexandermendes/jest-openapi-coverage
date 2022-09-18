@@ -23,7 +23,7 @@ export const globalTeardown = async (globalConfig: Config.GlobalConfig) => {
   }
 
   const requests = await loadRequests(openApiConfig.coverageDirectory);
-  const coverageResults = await getCoverageResults(docs, requests);
+  const coverageResults = await getCoverageResults(docs, requests, openApiConfig);
 
   reportCoverage(openApiConfig, coverageResults.results);
 

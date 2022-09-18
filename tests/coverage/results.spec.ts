@@ -1,3 +1,4 @@
+import { ConcreteJestOpenApiCoverageConfig } from '../../src/config/openapi';
 import { getCoverageResults } from '../../src/coverage/results';
 import { InterceptedRequest } from '../../src/request/parser';
 import { openApiDocs } from '../fixtures/openapi-docs';
@@ -8,50 +9,72 @@ const completeRequests: InterceptedRequest[] = [
     pathname: '/articles',
     query: '?limit=1&offset=2',
     body: '',
+    hostname: '127.0.0.1',
+    port: '7000',
   },
   {
     method: 'post',
     pathname: '/articles',
     query: '',
     body: '',
+    hostname: '127.0.0.1',
+    port: '7000',
   },
   {
     method: 'get',
     pathname: '/articles/my-article',
     query: '',
     body: '',
+    hostname: '127.0.0.1',
+    port: '7000',
   },
   {
     method: 'get',
     pathname: '/search',
     query: '?filter[author]=joebloggs&filter[rating]=5',
     body: '',
+    hostname: '127.0.0.1',
+    port: '7000',
   },
   {
     method: 'get',
     pathname: '/settings',
     query: '',
     body: '',
+    hostname: '127.0.0.1',
+    port: '7000',
   },
 ];
+
+const emptyOpenApiConfig = {} as ConcreteJestOpenApiCoverageConfig;
 
 describe('Coverage', () => {
   describe('results', () => {
     it('returns the expected results when no requests were made', () => {
-      const { results } = getCoverageResults(openApiDocs, []);
+      const { results } = getCoverageResults(
+        openApiDocs,
+        [],
+        emptyOpenApiConfig,
+      );
 
       expect(results.filter(({ covered }) => covered)).toEqual([]);
     });
 
     it('returns the expected results when a matching request was made', () => {
-      const { results } = getCoverageResults(openApiDocs, [
-        {
-          method: 'get',
-          pathname: '/articles',
-          query: '',
-          body: '',
-        },
-      ]);
+      const { results } = getCoverageResults(
+        openApiDocs,
+        [
+          {
+            method: 'get',
+            pathname: '/articles',
+            query: '',
+            body: '',
+            hostname: '127.0.0.1',
+            port: '7000',
+          },
+        ],
+        emptyOpenApiConfig,
+      );
 
       expect(results.filter(({ covered }) => covered)).toEqual([
         {
@@ -74,14 +97,18 @@ describe('Coverage', () => {
           pathname: '/articles',
           query: '?limit=1',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
         {
           method: 'get',
           pathname: '/search',
           query: '?filter[rating]=5',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
-      ]);
+      ], emptyOpenApiConfig);
 
       expect(results.filter(({ covered }) => covered)).toEqual([
         {
@@ -108,7 +135,11 @@ describe('Coverage', () => {
     });
 
     it('returns the expected results when all requests and query params were matched', () => {
-      const { results } = getCoverageResults(openApiDocs, completeRequests);
+      const { results } = getCoverageResults(
+        openApiDocs,
+        completeRequests,
+        emptyOpenApiConfig,
+      );
 
       expect(results.filter(({ covered }) => covered)).toEqual([
         {
@@ -162,8 +193,10 @@ describe('Coverage', () => {
           pathname: '/irrelevant',
           query: '',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
-      ]);
+      ], emptyOpenApiConfig);
 
       expect(results.filter(({ covered }) => covered)).toEqual([]);
     });
@@ -172,7 +205,7 @@ describe('Coverage', () => {
       const { results } = getCoverageResults({
         ...openApiDocs,
         servers: [
-          { url: 'http://www.example.com/base' },
+          { url: 'http://127.0.0.1:7000/base' },
         ],
       }, [
         {
@@ -180,8 +213,10 @@ describe('Coverage', () => {
           pathname: '/base/articles',
           query: '',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
-      ]);
+      ], emptyOpenApiConfig);
 
       expect(results.filter(({ covered }) => covered)).toEqual([
         {
@@ -204,7 +239,7 @@ describe('Coverage', () => {
           '/specific': {
             get: {
               servers: [
-                { url: 'http://www.example.com/base' },
+                { url: 'http://127.0.0.1:7000/base' },
               ],
             },
           },
@@ -215,8 +250,10 @@ describe('Coverage', () => {
           pathname: '/base/specific',
           query: '',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
-      ]);
+      ], emptyOpenApiConfig);
 
       expect(results.filter(({ covered }) => covered)).toEqual([
         {
@@ -245,8 +282,10 @@ describe('Coverage', () => {
           pathname: '/bad',
           query: '',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
-      ]);
+      ], emptyOpenApiConfig);
 
       expect(results.filter(({ covered }) => covered)).toEqual([]);
     });
@@ -278,8 +317,10 @@ describe('Coverage', () => {
           pathname: '/deep',
           query: '',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
-      ]);
+      ], emptyOpenApiConfig);
 
       expect(results.filter(({ covered }) => covered)).toEqual([
         {
@@ -293,11 +334,100 @@ describe('Coverage', () => {
         },
       ]);
     });
+
+    it('ignores requests to some unknown host', () => {
+      const { results } = getCoverageResults(openApiDocs, [
+        {
+          method: 'get',
+          pathname: '/articles',
+          query: '',
+          body: '',
+          hostname: 'example.com',
+          port: '7000',
+        },
+      ], emptyOpenApiConfig);
+
+      expect(results.filter(({ covered }) => covered)).toHaveLength(0);
+    });
+
+    it('considers requests to some alternative port on localhost', () => {
+      const { results } = getCoverageResults(openApiDocs, [
+        {
+          method: 'get',
+          pathname: '/articles',
+          query: '',
+          body: '',
+          hostname: 'localhost',
+          port: '5000',
+        },
+      ], emptyOpenApiConfig);
+
+      expect(results.filter(({ covered }) => covered)).toHaveLength(1);
+    });
+
+    it('considers requests to a host defined in the config', () => {
+      const { results } = getCoverageResults(openApiDocs, [
+        {
+          method: 'get',
+          pathname: '/articles',
+          query: '',
+          body: '',
+          hostname: 'example.com',
+          port: '5000',
+        },
+      ], {
+        server: {
+          hostname: 'example.com',
+        },
+      } as ConcreteJestOpenApiCoverageConfig);
+
+      expect(results.filter(({ covered }) => covered)).toHaveLength(1);
+    });
+
+    it('considers requests to a host and port defined in the config', () => {
+      const { results } = getCoverageResults(openApiDocs, [
+        {
+          method: 'get',
+          pathname: '/articles',
+          query: '',
+          body: '',
+          hostname: 'example.com',
+          port: '5000',
+        },
+      ], {
+        server: {
+          hostname: 'example.com',
+          port: 5000,
+        },
+      } as ConcreteJestOpenApiCoverageConfig);
+
+      expect(results.filter(({ covered }) => covered)).toHaveLength(1);
+    });
+
+    it('ignores requests if the port defined in the config does not match', () => {
+      const { results } = getCoverageResults(openApiDocs, [
+        {
+          method: 'get',
+          pathname: '/articles',
+          query: '',
+          body: '',
+          hostname: 'example.com',
+          port: '5000',
+        },
+      ], {
+        server: {
+          hostname: 'example.com',
+          port: 3000,
+        },
+      } as ConcreteJestOpenApiCoverageConfig);
+
+      expect(results.filter(({ covered }) => covered)).toHaveLength(0);
+    });
   });
 
   describe('totals', () => {
     it('returns the totals for no requests', () => {
-      const { totals } = getCoverageResults(openApiDocs, []);
+      const { totals } = getCoverageResults(openApiDocs, [], emptyOpenApiConfig);
 
       expect(totals.operations).toBe(0);
       expect(totals.queryParameters).toBe(0);
@@ -310,8 +440,10 @@ describe('Coverage', () => {
           pathname: '/articles',
           query: '',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
-      ]);
+      ], emptyOpenApiConfig);
 
       expect(totals.operations).toBe(20);
       expect(totals.queryParameters).toBe(0);
@@ -324,8 +456,10 @@ describe('Coverage', () => {
           pathname: '/articles',
           query: '?limit=1&offset=2',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
-      ]);
+      ], emptyOpenApiConfig);
 
       expect(totals.operations).toBe(20);
       expect(totals.queryParameters).toBe(50);
@@ -338,21 +472,29 @@ describe('Coverage', () => {
           pathname: '/articles',
           query: '?limit=1&offset=2',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
         {
           method: 'get',
           pathname: '/search',
           query: '?filter[author]=joebloggs&filter[rating]=5',
           body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
         },
-      ]);
+      ], emptyOpenApiConfig);
 
       expect(totals.operations).toBe(40);
       expect(totals.queryParameters).toBe(100);
     });
 
     it('returns the totals for all matching operations and query params', () => {
-      const { totals } = getCoverageResults(openApiDocs, completeRequests);
+      const { totals } = getCoverageResults(
+        openApiDocs,
+        completeRequests,
+        emptyOpenApiConfig,
+      );
 
       expect(totals.operations).toBe(100);
       expect(totals.queryParameters).toBe(100);

@@ -1,7 +1,7 @@
-import { CoverageThreshold } from '../config/openapi';
+import { CoverageThreshold, CoverageThresholdMetric } from '../config/openapi';
 import { logger } from '../logger';
 import { percentageToString } from './format';
-import { CoverageResults, CoverageThresholdMetric } from './results';
+import { CoverageResults } from './results';
 
 export const checkThresholds = (
   coverageThreshold: CoverageThreshold,
