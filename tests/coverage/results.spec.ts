@@ -27,6 +27,12 @@ const completeRequests: InterceptedRequest[] = [
     query: '?filter[author]=joebloggs&filter[rating]=5',
     body: '',
   },
+  {
+    method: 'get',
+    pathname: '/settings',
+    query: '',
+    body: '',
+  },
 ];
 
 describe('Coverage', () => {
@@ -139,6 +145,152 @@ describe('Coverage', () => {
             { name: 'filter[rating]', covered: true },
           ],
         },
+        {
+          path: '/settings',
+          method: 'get',
+          covered: true,
+          percentageOfQueriesCovered: 100,
+          queryParams: [],
+        },
+      ]);
+    });
+
+    it('ignores an irrelevant request', () => {
+      const { results } = getCoverageResults(openApiDocs, [
+        {
+          method: 'get',
+          pathname: '/irrelevant',
+          query: '',
+          body: '',
+        },
+      ]);
+
+      expect(results.filter(({ covered }) => covered)).toEqual([]);
+    });
+
+    it('considers any path segement in the main servers object', () => {
+      const { results } = getCoverageResults({
+        ...openApiDocs,
+        servers: [
+          { url: 'http://www.example.com/base' },
+        ],
+      }, [
+        {
+          method: 'get',
+          pathname: '/base/articles',
+          query: '',
+          body: '',
+        },
+      ]);
+
+      expect(results.filter(({ covered }) => covered)).toEqual([
+        {
+          path: '/articles',
+          method: 'get',
+          covered: true,
+          percentageOfQueriesCovered: 0,
+          queryParams: [
+            { name: 'limit', covered: false },
+            { name: 'offset', covered: false },
+          ],
+        },
+      ]);
+    });
+
+    it('considers any path segement in the operation servers object', () => {
+      const { results } = getCoverageResults({
+        ...openApiDocs,
+        paths: {
+          '/specific': {
+            get: {
+              servers: [
+                { url: 'http://www.example.com/base' },
+              ],
+            },
+          },
+        },
+      }, [
+        {
+          method: 'get',
+          pathname: '/base/specific',
+          query: '',
+          body: '',
+        },
+      ]);
+
+      expect(results.filter(({ covered }) => covered)).toEqual([
+        {
+          path: '/specific',
+          method: 'get',
+          covered: true,
+          percentageOfQueriesCovered: 100,
+          queryParams: [],
+        },
+      ]);
+    });
+
+    it('ignores an invalid operation', () => {
+      const { results } = getCoverageResults({
+        ...openApiDocs,
+        paths: {
+          ...openApiDocs.paths,
+          '/bad': null,
+          '/also-bad': {
+            get: null,
+          },
+        },
+      }, [
+        {
+          method: 'get',
+          pathname: '/bad',
+          query: '',
+          body: '',
+        },
+      ]);
+
+      expect(results.filter(({ covered }) => covered)).toEqual([]);
+    });
+
+    it.each([
+      undefined,
+      {},
+      { $ref: '#/components/schemas/Thing' },
+    ])('does not consider an object deep with the schema %s', (schema) => {
+      const { results } = getCoverageResults({
+        ...openApiDocs,
+        paths: {
+          '/deep': {
+            get: {
+              parameters: [
+                {
+                  in: 'query',
+                  style: 'deepObject',
+                  name: 'deep',
+                  schema,
+                },
+              ],
+            },
+          },
+        },
+      }, [
+        {
+          method: 'get',
+          pathname: '/deep',
+          query: '',
+          body: '',
+        },
+      ]);
+
+      expect(results.filter(({ covered }) => covered)).toEqual([
+        {
+          path: '/deep',
+          method: 'get',
+          covered: true,
+          percentageOfQueriesCovered: 0,
+          queryParams: [
+            { covered: false, name: 'deep' },
+          ],
+        },
       ]);
     });
   });
@@ -161,7 +313,7 @@ describe('Coverage', () => {
         },
       ]);
 
-      expect(totals.operations).toBe(25);
+      expect(totals.operations).toBe(20);
       expect(totals.queryParameters).toBe(0);
     });
 
@@ -175,7 +327,7 @@ describe('Coverage', () => {
         },
       ]);
 
-      expect(totals.operations).toBe(25);
+      expect(totals.operations).toBe(20);
       expect(totals.queryParameters).toBe(50);
     });
 
@@ -195,7 +347,7 @@ describe('Coverage', () => {
         },
       ]);
 
-      expect(totals.operations).toBe(50);
+      expect(totals.operations).toBe(40);
       expect(totals.queryParameters).toBe(100);
     });
 

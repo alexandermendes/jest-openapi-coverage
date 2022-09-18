@@ -127,6 +127,7 @@ export const getCoverageResults = (
   Object.entries(docs.paths).forEach(([path, pathItemObject]: [string, PathItemObject]) => {
     Object
       .entries(pathItemObject ?? {})
+      .filter(([, operationConfig]) => !!operationConfig)
       .forEach(([operation, operationConfig]: [string, OperationObject]) => {
         const matchingRequests = getMatchingRequests(
           docs,
@@ -145,10 +146,6 @@ export const getCoverageResults = (
         }
 
         const matchingQueryParams = getMatchingQueryParams(matchingRequests);
-
-        if (typeof operationConfig !== 'object') {
-          return;
-        }
 
         const parameterObjects: ParameterObject[] = operationConfig
           .parameters

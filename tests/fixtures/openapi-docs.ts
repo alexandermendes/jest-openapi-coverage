@@ -49,7 +49,7 @@ export const openApiDocs: OpenAPIObject = {
     },
     '/search': {
       get: {
-        operationId: 'getArticle',
+        operationId: 'search',
         parameters: [
           {
             in: 'query',
@@ -69,6 +69,11 @@ export const openApiDocs: OpenAPIObject = {
             },
           },
         ],
+      },
+    },
+    '/settings': {
+      get: {
+        operationId: 'getSettings',
       },
     },
   },
