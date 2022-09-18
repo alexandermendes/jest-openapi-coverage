@@ -1,13 +1,13 @@
 import { Config } from '@jest/types';
-import { getOpenApiConfig } from '../../src/config/openapi';
-import { writeDocs } from '../../src/docs/io';
-import { setupOpenApiDocs } from '../../src/docs/setup';
-import { openApiDocs } from '../fixtures/openapi-docs';
-import { getJestConfig } from '../../src/config/jest';
+import { getOpenApiConfig } from '../../../src/config/openapi';
+import { writeDocs } from '../../../src/docs/io';
+import { setupOpenApiDocs } from '../../../src/docs/setup';
+import { openApiDocs } from '../../fixtures/openapi-docs';
+import { getJestConfig } from '../../../src/config/jest';
 
-jest.mock('../../src/config/jest');
-jest.mock('../../src/config/openapi');
-jest.mock('../../src/docs/io');
+jest.mock('../../../src/config/jest');
+jest.mock('../../../src/config/openapi');
+jest.mock('../../../src/docs/io');
 
 const globalConfig = {
   collectCoverage: true,

@@ -1,5 +1,5 @@
 import fse from 'fs-extra';
-import { storeRequests } from '../../src/request/io';
+import { storeRequests } from '../../../src/request/io';
 
 jest.mock('fs-extra');
 jest

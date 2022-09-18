@@ -1,7 +1,7 @@
-import { ConcreteJestOpenApiCoverageConfig } from '../../src/config/openapi';
-import { getCoverageResults } from '../../src/coverage/results';
-import { InterceptedRequest } from '../../src/request/parser';
-import { openApiDocs } from '../fixtures/openapi-docs';
+import { ConcreteJestOpenApiCoverageConfig } from '../../../src/config/openapi';
+import { getCoverageResults } from '../../../src/coverage/results';
+import { InterceptedRequest } from '../../../src/request/parser';
+import { openApiDocs } from '../../fixtures/openapi-docs';
 
 const completeRequests: InterceptedRequest[] = [
   {

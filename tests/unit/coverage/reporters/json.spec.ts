@@ -1,11 +1,11 @@
 import fse from 'fs-extra';
-import { ConcreteJestOpenApiCoverageConfig } from '../../../src/config/openapi';
-import { printJson } from '../../../src/coverage/reporters/json';
-import { CoverageResult } from '../../../src/coverage/results';
-import { logger } from '../../../src/logger';
+import { ConcreteJestOpenApiCoverageConfig } from '../../../../src/config/openapi';
+import { printJson } from '../../../../src/coverage/reporters/json';
+import { CoverageResult } from '../../../../src/coverage/results';
+import { logger } from '../../../../src/logger';
 
 jest.mock('fs-extra');
-jest.mock('../../../src/logger');
+jest.mock('../../../../src/logger');
 
 const results: CoverageResult[] = [
   {

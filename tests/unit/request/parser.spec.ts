@@ -1,5 +1,5 @@
 import { IsomorphicRequest } from '@mswjs/interceptors';
-import { parseRequest } from '../../src/request/parser';
+import { parseRequest } from '../../../src/request/parser';
 
 const getArrayBuffer = (array: Uint8Array): ArrayBuffer => array
   .buffer

@@ -1,5 +1,5 @@
 import { Table } from 'console-table-printer';
-import { printTable } from '../../../src/coverage/reporters/table';
+import { printTable } from '../../../../src/coverage/reporters/table';
 
 jest.mock('console-table-printer');
 jest.mock('chalk', () => ({

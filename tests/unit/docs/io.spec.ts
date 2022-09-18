@@ -1,6 +1,6 @@
 import fse from 'fs-extra';
-import { readDocs, writeDocs } from '../../src/docs/io';
-import { openApiDocs } from '../fixtures/openapi-docs';
+import { readDocs, writeDocs } from '../../../src/docs/io';
+import { openApiDocs } from '../../fixtures/openapi-docs';
 
 jest.mock('fs-extra');
 

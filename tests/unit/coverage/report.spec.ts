@@ -1,11 +1,11 @@
-import { ConcreteJestOpenApiCoverageConfig, JestOpenApiCoverageConfig } from '../../src/config/openapi';
-import { reportCoverage } from '../../src/coverage/report';
-import { printJson } from '../../src/coverage/reporters/json';
-import { printTable } from '../../src/coverage/reporters/table';
-import { CoverageResult } from '../../src/coverage/results';
+import { ConcreteJestOpenApiCoverageConfig } from '../../../src/config/openapi';
+import { reportCoverage } from '../../../src/coverage/report';
+import { printJson } from '../../../src/coverage/reporters/json';
+import { printTable } from '../../../src/coverage/reporters/table';
+import { CoverageResult } from '../../../src/coverage/results';
 
-jest.mock('../../src/coverage/reporters/table');
-jest.mock('../../src/coverage/reporters/json');
+jest.mock('../../../src/coverage/reporters/table');
+jest.mock('../../../src/coverage/reporters/json');
 
 const results: CoverageResult[] = [
   {

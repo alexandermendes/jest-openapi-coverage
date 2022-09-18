@@ -1,14 +1,14 @@
 import { Config } from '@jest/types';
 import fse from 'fs-extra';
 import rimraf from 'rimraf';
-import { getOpenApiConfig } from '../src/config/openapi';
-import { writeDocs } from '../src/docs/io';
-import { globalSetup } from '../src/global-setup';
+import { getOpenApiConfig } from '../../src/config/openapi';
+import { writeDocs } from '../../src/docs/io';
+import { globalSetup } from '../../src/global-setup';
 
 jest.mock('fs-extra');
 jest.mock('rimraf');
-jest.mock('../src/config/openapi');
-jest.mock('../src/docs/io');
+jest.mock('../../src/config/openapi');
+jest.mock('../../src/docs/io');
 
 const globalConfig = {
   collectCoverage: true,

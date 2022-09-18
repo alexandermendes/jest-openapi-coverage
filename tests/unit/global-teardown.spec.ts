@@ -1,24 +1,24 @@
 import { Config } from '@jest/types';
-import { getOpenApiConfig, JestOpenApiCoverageConfig } from '../src/config/openapi';
-import { reportCoverage } from '../src/coverage/report';
-import { CoverageResults, getCoverageResults } from '../src/coverage/results';
-import { checkThresholds } from '../src/coverage/thresholds';
-import { readDocs } from '../src/docs/io';
-import { globalTeardown } from '../src/global-teardown';
-import { logger } from '../src/logger';
-import { loadRequests } from '../src/request/io';
-import { InterceptedRequest } from '../src/request/parser';
-import { openApiDocs } from './fixtures/openapi-docs';
+import { getOpenApiConfig, JestOpenApiCoverageConfig } from '../../src/config/openapi';
+import { reportCoverage } from '../../src/coverage/report';
+import { CoverageResults, getCoverageResults } from '../../src/coverage/results';
+import { checkThresholds } from '../../src/coverage/thresholds';
+import { readDocs } from '../../src/docs/io';
+import { globalTeardown } from '../../src/global-teardown';
+import { logger } from '../../src/logger';
+import { loadRequests } from '../../src/request/io';
+import { InterceptedRequest } from '../../src/request/parser';
+import { openApiDocs } from '../fixtures/openapi-docs';
 
 jest.mock('fs-extra');
 jest.mock('rimraf');
-jest.mock('../src/config/openapi');
-jest.mock('../src/docs/io');
-jest.mock('../src/request/io');
-jest.mock('../src/coverage/report');
-jest.mock('../src/coverage/thresholds');
-jest.mock('../src/coverage/results');
-jest.mock('../src/logger');
+jest.mock('../../src/config/openapi');
+jest.mock('../../src/docs/io');
+jest.mock('../../src/request/io');
+jest.mock('../../src/coverage/report');
+jest.mock('../../src/coverage/thresholds');
+jest.mock('../../src/coverage/results');
+jest.mock('../../src/logger');
 
 const globalConfig = {
   collectCoverage: true,

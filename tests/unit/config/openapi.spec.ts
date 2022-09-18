@@ -3,7 +3,7 @@ import appRoot from 'app-root-path';
 import path from 'path';
 import { cosmiconfigSync } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
-import { getOpenApiConfig } from '../../src/config/openapi';
+import { getOpenApiConfig } from '../../../src/config/openapi';
 
 jest.mock('cosmiconfig');
 jest.mock('cosmiconfig-typescript-loader');
