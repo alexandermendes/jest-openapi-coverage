@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/alexandermendes/jest-openapi-coverage/compare/v1.2.1...v1.3.0) (2022-09-18)
+
+
+### Features
+
+* add throwIfNoDocs option ([fedee06](https://github.com/alexandermendes/jest-openapi-coverage/commit/fedee06a9cb41998fb7e6f879baaf7d474f1bfc4))
+
 ## [1.2.1](https://github.com/alexandermendes/jest-openapi-coverage/compare/v1.2.0...v1.2.1) (2022-09-18)
 
 
