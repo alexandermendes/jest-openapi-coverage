@@ -6,27 +6,33 @@ export const openApiDocs: OpenAPIObject = {
     title: 'Test API',
     version: '1.2.3',
   },
+  components: {
+    parameters: {
+      offsetParam: {
+        in: 'query',
+        name: 'offset',
+        schema: {
+          minimum: 0,
+          type: 'number',
+        },
+      },
+      limitParam: {
+        in: 'query',
+        name: 'limit',
+        schema: {
+          minimum: 0,
+          type: 'number',
+        },
+      },
+    },
+  },
   paths: {
     '/articles': {
       get: {
         operationId: 'getArticles',
         parameters: [
-          {
-            in: 'query',
-            name: 'limit',
-            schema: {
-              minimum: 0,
-              type: 'number',
-            },
-          },
-          {
-            in: 'query',
-            name: 'offset',
-            schema: {
-              minimum: 0,
-              type: 'number',
-            },
-          },
+          { $ref: '#/components/parameters/limitParam' },
+          { $ref: '#/components/parameters/offsetParam' },
         ],
       },
       post: {

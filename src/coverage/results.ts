@@ -126,8 +126,48 @@ const getMatchingQueryParams = (
 const isParameterObject = (
   obj: ParameterObject | ReferenceObject,
 ): obj is ParameterObject => (
-  ('in' in obj) && obj.in === 'query'
+  typeof obj === 'object'
+  && !('$ref' in obj)
 );
+
+const resolveReference = (
+  docs: OpenAPIObject,
+  ref: ReferenceObject,
+): ParameterObject | null => {
+  const pathParams = ref.$ref.replace(/^#\//, '').replace(/\/$/, '').split('/');
+
+  // @ts-ignore
+  return pathParams.reduce((acc, key) => acc[key], docs);
+};
+
+const getDocumentedQueryParams = (
+  docs: OpenAPIObject,
+  parameters?: (ReferenceObject | ParameterObject)[],
+) => parameters
+  ?.reduce((acc, paramOrRef) => {
+    const param: ParameterObject | null = isParameterObject(paramOrRef)
+      ? paramOrRef
+      : resolveReference(docs, paramOrRef);
+
+    if (param?.in !== 'query') {
+      return acc;
+    }
+
+    if (
+      param.style === 'deepObject'
+      && param.schema
+      && isSchemaObject(param.schema)
+      && param.schema.properties
+    ) {
+      Object.keys(param.schema.properties).forEach((key) => {
+        acc.push(`${param.name}[${key}]`);
+      });
+
+      return acc;
+    }
+
+    return [...acc, param.name];
+  }, [] as string[]) ?? [];
 
 const getPercentageCovered = (
   total: number,
@@ -181,27 +221,10 @@ export const getCoverageResults = (
 
         const matchingQueryParams = getMatchingQueryParams(matchingRequests);
 
-        const parameterObjects: ParameterObject[] = operationConfig
-          .parameters
-          ?.filter(isParameterObject) ?? [];
-
-        const documentedQueryParams = parameterObjects
-          .reduce((acc, param) => {
-            if (
-              param.style === 'deepObject'
-              && param.schema
-              && isSchemaObject(param.schema)
-              && param.schema.properties
-            ) {
-              Object.keys(param.schema.properties).forEach((key) => {
-                acc.push(`${param.name}[${key}]`);
-              });
-
-              return acc;
-            }
-
-            return [...acc, param.name];
-          }, [] as string[]) ?? [];
+        const documentedQueryParams = getDocumentedQueryParams(
+          docs,
+          operationConfig.parameters,
+        );
 
         const queryParams = documentedQueryParams.map((name: string) => ({
           name,
