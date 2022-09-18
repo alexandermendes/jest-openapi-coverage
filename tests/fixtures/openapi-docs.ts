@@ -68,6 +68,13 @@ export const openApiDocs: OpenAPIObject = {
               },
             },
           },
+          {
+            in: 'query',
+            name: 'id',
+            schema: {
+              type: 'string',
+            },
+          },
         ],
       },
     },

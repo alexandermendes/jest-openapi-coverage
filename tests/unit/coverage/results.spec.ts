@@ -31,7 +31,7 @@ const completeRequests: InterceptedRequest[] = [
   {
     method: 'get',
     pathname: '/search',
-    query: '?filter[author]=joebloggs&filter[rating]=5',
+    query: '?filter[author]=joebloggs&filter[rating]=5&id=42',
     body: '',
     hostname: '127.0.0.1',
     port: '7000',
@@ -103,7 +103,7 @@ describe('Coverage', () => {
         {
           method: 'get',
           pathname: '/search',
-          query: '?filter[rating]=5',
+          query: '?filter[rating]=5&id=42',
           body: '',
           hostname: '127.0.0.1',
           port: '7000',
@@ -125,10 +125,11 @@ describe('Coverage', () => {
           path: '/search',
           method: 'get',
           covered: true,
-          percentageOfQueriesCovered: 50,
+          percentageOfQueriesCovered: 66.66666666666666,
           queryParams: [
             { name: 'filter[author]', covered: false },
             { name: 'filter[rating]', covered: true },
+            { name: 'id', covered: true },
           ],
         },
       ]);
@@ -174,6 +175,7 @@ describe('Coverage', () => {
           queryParams: [
             { name: 'filter[author]', covered: true },
             { name: 'filter[rating]', covered: true },
+            { name: 'id', covered: true },
           ],
         },
         {
@@ -429,7 +431,7 @@ describe('Coverage', () => {
         {
           method: 'get',
           pathname: '/search',
-          query: '?filter%5Bauthor%5D=joebloggs&filter%5Brating%5D=5',
+          query: '?filter%5Bauthor%5D=joebloggs&filter%5Brating%5D=5&id%5B%5D=1',
           body: '',
           hostname: '127.0.0.1',
           port: '7000',
@@ -445,6 +447,34 @@ describe('Coverage', () => {
           queryParams: [
             { name: 'filter[author]', covered: true },
             { name: 'filter[rating]', covered: true },
+            { name: 'id', covered: true },
+          ],
+        },
+      ]);
+    });
+
+    it('considers and array of values for the same parameter', () => {
+      const { results } = getCoverageResults(openApiDocs, [
+        {
+          method: 'get',
+          pathname: '/search',
+          query: '?id[]=1&id[]=2',
+          body: '',
+          hostname: '127.0.0.1',
+          port: '7000',
+        },
+      ], emptyOpenApiConfig);
+
+      expect(results.filter(({ covered }) => covered)).toEqual([
+        {
+          path: '/search',
+          method: 'get',
+          covered: true,
+          percentageOfQueriesCovered: 33.33333333333333,
+          queryParams: [
+            { name: 'filter[author]', covered: false },
+            { name: 'filter[rating]', covered: false },
+            { name: 'id', covered: true },
           ],
         },
       ]);
@@ -488,7 +518,7 @@ describe('Coverage', () => {
       ], emptyOpenApiConfig);
 
       expect(totals.operations).toBe(20);
-      expect(totals.queryParameters).toBe(50);
+      expect(totals.queryParameters).toBe(40);
     });
 
     it('returns the totals for all matching query params', () => {
@@ -504,7 +534,7 @@ describe('Coverage', () => {
         {
           method: 'get',
           pathname: '/search',
-          query: '?filter[author]=joebloggs&filter[rating]=5',
+          query: '?filter[author]=joebloggs&filter[rating]=5&id=42',
           body: '',
           hostname: '127.0.0.1',
           port: '7000',

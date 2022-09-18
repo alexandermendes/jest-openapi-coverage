@@ -111,7 +111,7 @@ const getMatchingQueryParams = (
   const parsedQuery = qs.parse(request.query.replace('?', ''));
 
   Object.entries(parsedQuery).forEach(([key, value]) => {
-    if (typeof value !== 'object') {
+    if (Array.isArray(value) || typeof value !== 'object') {
       acc.push(key);
 
       return;
