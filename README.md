@@ -163,7 +163,7 @@ module.exports = {
 };
 ```
 
-### `servers`
+### `server`
 
 Default: `undefined`
 
