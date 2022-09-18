@@ -3,11 +3,16 @@ import path from 'path';
 import appRoot from 'app-root-path';
 import { cosmiconfigSync } from 'cosmiconfig';
 import { TypeScriptLoader } from 'cosmiconfig-typescript-loader';
+import { CoverageThresholdMetric } from '../coverage/results';
 
 const COVERAGE_SUB_DIRECTORY = 'openapi';
 const OPENAPI_MODULE_NAME = 'jest-openapi-coverage';
 
 type Format = 'table' | 'json';
+
+export type CoverageThreshold = {
+  [key in CoverageThresholdMetric]?: number
+};
 
 export type JestOpenApiCoverageConfig = {
   format?: Format[];
@@ -15,6 +20,7 @@ export type JestOpenApiCoverageConfig = {
   docsPath?: string;
   enabled?: boolean;
   coverageDirectory?: string;
+  coverageThreshold?: CoverageThreshold;
 };
 
 export type ConcreteJestOpenApiCoverageConfig = JestOpenApiCoverageConfig & {

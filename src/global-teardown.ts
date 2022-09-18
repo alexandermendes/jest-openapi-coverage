@@ -4,6 +4,7 @@ import { getCoverageResults } from './coverage/results';
 import { reportCoverage } from './coverage/report';
 import { readDocs } from './docs/io';
 import { loadRequests } from './request/io';
+import { checkThresholds } from './coverage/thresholds';
 
 export const globalTeardown = async (globalConfig: Config.GlobalConfig) => {
   const openApiConfig = getOpenApiConfig(globalConfig);
@@ -22,7 +23,11 @@ export const globalTeardown = async (globalConfig: Config.GlobalConfig) => {
   }
 
   const requests = await loadRequests(openApiConfig.coverageDirectory);
-  const results = await getCoverageResults(docs, requests);
+  const coverageResults = await getCoverageResults(docs, requests);
 
-  reportCoverage(openApiConfig, results);
+  reportCoverage(openApiConfig, coverageResults.results);
+
+  if (openApiConfig.coverageThreshold) {
+    checkThresholds(openApiConfig.coverageThreshold, coverageResults);
+  }
 };

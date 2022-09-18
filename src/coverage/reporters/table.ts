@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import { Table } from 'console-table-printer';
 import { CoverageResult } from '../results';
+import { percentageToString } from '../format';
 
 type TableColumnName =
   'method' |
@@ -45,11 +46,10 @@ const addTableRow = (table: Table, result: CoverageResult) => {
   const row: TableRow = {
     method: colour(result.method.toUpperCase(), result.covered),
     endpoint: colour(result.path, result.covered),
-    queries: colour(result
-      .percentageOfQueriesCovered
-      .toFixed(2)
-      .replace(/0?0$/, '')
-      .replace(/\.$/, ''), result.percentageOfQueriesCovered),
+    queries: colour(
+      percentageToString(result.percentageOfQueriesCovered),
+      result.percentageOfQueriesCovered,
+    ),
     uncoveredQueries: colour(`${uncoveredQueries
       .map(({ name }) => name)
       .reduce((acc, name) => {

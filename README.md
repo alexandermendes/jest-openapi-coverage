@@ -100,6 +100,21 @@ module.exports = {
 };
 ```
 
+### `coverageThreshold`
+
+Default: `undefined`
+
+This will be used to configure minimum threshold enforcement for coverage results.
+
+```js
+module.exports = {
+  coverageThreshold: {
+    operations: 80,
+    queryParameters: 80,
+  },
+};
+```
+
 ### `docsPath`
 
 Default: `undefined`

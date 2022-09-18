@@ -14,6 +14,7 @@ type QueryParamCoverageResult = {
   name: string;
   covered: boolean;
 };
+export type CoverageThresholdMetric = 'operations' | 'queryParameters';
 
 export type CoverageResult = {
   path: string;
@@ -21,6 +22,13 @@ export type CoverageResult = {
   covered: boolean;
   queryParams: QueryParamCoverageResult[];
   percentageOfQueriesCovered: number;
+}
+
+export type CoverageResults = {
+  results: CoverageResult[];
+  totals: {
+    [key in CoverageThresholdMetric]: number;
+  }
 }
 
 const getPathParts = (path: string) => path.replace(/^\/|\/$/g, '').split('/');
@@ -89,34 +97,36 @@ const isParameterObject = (
   ('in' in obj) && obj.in === 'query'
 );
 
-const getPercentageOfQueriesCovered = (
-  queryParams: QueryParamCoverageResult[],
+const getPercentageCovered = (
+  total: number,
+  uncovered: number,
 ): number => {
-  const uncoveredQueryParams = queryParams.filter(({ covered }) => !covered);
-  const nUncoveredQueryParams = uncoveredQueryParams.length;
-  const nQueryParams = queryParams.length;
-  const hasQueryParams = !!nQueryParams;
-
-  if (!nUncoveredQueryParams) {
+  if (!uncovered) {
     return 100;
   }
 
-  if (hasQueryParams && nQueryParams === nUncoveredQueryParams) {
+  if (total && total === uncovered) {
     return 0;
   }
 
-  return (nUncoveredQueryParams / nQueryParams) * 100;
+  return ((total - uncovered) / total) * 100;
 };
 
 export const getCoverageResults = (
   docs: OpenAPIObject,
   requests: InterceptedRequest[],
-): CoverageResult[] => {
+): CoverageResults => {
   const results: CoverageResult[] = [];
 
-  Object.entries(docs.paths).forEach(([path, operations]: [string, PathItemObject]) => {
+  let totalOperations = 0;
+  let totalUncoveredOperations = 0;
+
+  let totalQueryParams = 0;
+  let totalUncoveredQueryParams = 0;
+
+  Object.entries(docs.paths).forEach(([path, pathItemObject]: [string, PathItemObject]) => {
     Object
-      .entries(operations ?? {})
+      .entries(pathItemObject ?? {})
       .forEach(([operation, operationConfig]: [string, OperationObject]) => {
         const matchingRequests = getMatchingRequests(
           docs,
@@ -125,6 +135,14 @@ export const getCoverageResults = (
           operation,
           operationConfig,
         );
+
+        const operationCovered = !!matchingRequests.length;
+
+        totalOperations += 1;
+
+        if (!operationCovered) {
+          totalUncoveredOperations += 1;
+        }
 
         const matchingQueryParams = getMatchingQueryParams(matchingRequests);
 
@@ -159,17 +177,31 @@ export const getCoverageResults = (
           covered: matchingQueryParams.includes(name),
         }));
 
+        const uncoveredQueryParams = queryParams.filter(({ covered }) => !covered);
+
+        totalQueryParams += queryParams.length;
+        totalUncoveredQueryParams += uncoveredQueryParams.length;
+
         const result: CoverageResult = {
           path,
           method: operation,
-          covered: !!matchingRequests.length,
+          covered: operationCovered,
           queryParams,
-          percentageOfQueriesCovered: getPercentageOfQueriesCovered(queryParams),
+          percentageOfQueriesCovered: getPercentageCovered(
+            queryParams.length,
+            uncoveredQueryParams.length,
+          ),
         };
 
         results.push(result);
       });
   });
 
-  return results;
+  return {
+    results,
+    totals: {
+      operations: getPercentageCovered(totalOperations, totalUncoveredOperations),
+      queryParameters: getPercentageCovered(totalQueryParams, totalUncoveredQueryParams),
+    },
+  };
 };
