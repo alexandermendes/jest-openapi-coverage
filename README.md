@@ -180,6 +180,19 @@ module.exports = {
 };
 ```
 
+### `throwIfNoDocs`
+
+Default: `false`
+
+Throw an error, rather than log a warning, if no docs were provided and therefore
+coverage could not be checked.
+
+```js
+module.exports = {
+  throwIfNoDocs: true,
+};
+```
+
 ## Manual setup
 
 If you already have Jest setup files that you want to reuse you can call the

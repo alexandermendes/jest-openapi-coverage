@@ -22,6 +22,7 @@ export type JestOpenApiCoverageConfig = {
   collectCoverage?: boolean;
   coverageDirectory?: string;
   coverageThreshold?: CoverageThreshold;
+  throwIfNoDocs?: boolean;
   server?: {
     hostname: string;
     port?: number;

@@ -19,9 +19,12 @@ export const writeDocs = async (
 
 export const readDocs = async (
   coverageDirectory: string,
-): Promise<OpenAPIObject> => {
+): Promise<OpenAPIObject | null> => {
   const docsPath = await getDocsPath(coverageDirectory);
-  const json = fse.readJSONSync(docsPath);
 
-  return json;
+  if (!fse.existsSync(docsPath)) {
+    return null;
+  }
+
+  return fse.readJSON(docsPath);
 };
