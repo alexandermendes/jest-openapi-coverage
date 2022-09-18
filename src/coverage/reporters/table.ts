@@ -5,7 +5,7 @@ import { percentageToString } from '../format';
 
 type TableColumnName =
   'method' |
-  'endpoint' |
+  'path' |
   'queries' |
   'uncoveredQueries';
 
@@ -45,7 +45,7 @@ const addTableRow = (table: Table, result: CoverageResult) => {
 
   const row: TableRow = {
     method: colour(result.method.toUpperCase(), result.covered),
-    endpoint: colour(result.path, result.covered),
+    path: colour(result.path, result.covered),
     queries: colour(
       percentageToString(result.percentageOfQueriesCovered),
       result.percentageOfQueriesCovered,
@@ -71,7 +71,7 @@ const addTableRow = (table: Table, result: CoverageResult) => {
 export const printTable = (results: CoverageResult[]) => {
   const columns: TableColumn[] = [
     { name: 'method', alignment: 'left', title: 'Method' },
-    { name: 'endpoint', alignment: 'left', title: 'Endpoint' },
+    { name: 'path', alignment: 'left', title: 'Path' },
     { name: 'queries', alignment: 'right', title: '% Queries' },
     { name: 'uncoveredQueries', alignment: 'left', title: 'Uncovered queries' },
   ];

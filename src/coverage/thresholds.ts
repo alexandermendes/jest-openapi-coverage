@@ -17,7 +17,7 @@ export const checkThresholds = (
       `Jest OpenAPI: coverage threshold for ${key}`,
       condition,
       'met:',
-      percentageToString(result),
+      `${percentageToString(result)}%`,
     ].filter((x) => x).join(' ');
 
     if (!threshold) {

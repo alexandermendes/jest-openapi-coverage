@@ -35,9 +35,9 @@ describe('Coverage: Table Reporter', () => {
             title: 'Method',
           },
           {
-            name: 'endpoint',
+            name: 'path',
             alignment: 'left',
-            title: 'Endpoint',
+            title: 'Path',
           },
           {
             name: 'queries',
@@ -86,7 +86,7 @@ describe('Coverage: Table Reporter', () => {
       expect(mockTable.addRow).toHaveBeenCalledTimes(1);
       expect(mockTable.addRow).toHaveBeenCalledWith(
         {
-          endpoint: `${primaryColor}(/articles)`,
+          path: `${primaryColor}(/articles)`,
           method: `${primaryColor}(GET)`,
           queries: `${secondaryColor}(${percentage})`,
           uncoveredQueries: `${secondaryColor}()`,
@@ -115,7 +115,7 @@ describe('Coverage: Table Reporter', () => {
     expect(mockTable.addRow).toHaveBeenCalledTimes(1);
     expect(mockTable.addRow).toHaveBeenCalledWith(
       {
-        endpoint: 'green(/articles)',
+        path: 'green(/articles)',
         method: 'green(GET)',
         queries: 'yellow(66.67)',
         uncoveredQueries: 'yellow(one, two)',
