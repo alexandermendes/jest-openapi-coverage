@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/alexandermendes/jest-openapi-coverage/compare/v1.3.1...v1.4.0) (2022-09-19)
+
+
+### Features
+
+* resolve query parameter references ([816b682](https://github.com/alexandermendes/jest-openapi-coverage/commit/816b682edfcca327b4d738ce4a4e66d73d007b65))
+
 ## [1.3.1](https://github.com/alexandermendes/jest-openapi-coverage/compare/v1.3.0...v1.3.1) (2022-09-18)
 
 
